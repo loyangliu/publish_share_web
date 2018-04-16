@@ -13,3 +13,5 @@ http://www.loyangliu.com/index.php/ajax/default/index
 (1) 增加 session 模块
 (2) 用户登录鉴权
 (3) MVC框架
+测试路径：
+http://www.loyangliu.com
