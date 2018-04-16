@@ -20,7 +20,7 @@ class Dispatcher
 		
 	}
 
-	public static function instance()
+	public static function & instance()
 	{
 		if(!Dispatcher::$_this)
 		{
@@ -155,33 +155,6 @@ class Dispatcher
 	 */
 	private function executeModule(& $ruler)
 	{
-		$params = array();
-		if(get_magic_quotes_gpc())
-		{
-			if(!empty($_POST))
-			{
-				$params = array_merge($params, stripslashes_deep($_POST));
-			}
-
-			if(!empty($_GET))
-			{
-				$params = array_merge($params, stripslashes_deep($_GET));
-			}
-
-		}
-		else
-		{
-			if(!empty($_POST))
-			{
-				$params = array_merge($params, $_POST);
-			}
-
-			if(!empty($_GET))
-			{
-				$params = array_merge($params, $_GET);
-			}
-		}
-		
 		$serverPath = $ruler->serverPath;
 		$ctrlName= strtolower($ruler->ctrlName);
 		$actionName= $ruler->actionName;
@@ -207,6 +180,7 @@ class Dispatcher
 		}
 		
 		// controller 执行入口
+		$controller->initialize($ruler);
 		return $this->invoke($controller, $action);
 	}
 	
@@ -216,9 +190,12 @@ class Dispatcher
 	 */
 	protected function invoke(& $controller, $action)
 	{
-		$controller->beforeFilter();
-		call_user_func_array(array(& $controller, $action), array());
-		$controller->afterFilter();
+		$ret = $controller->loginCheck();
+		
+		if($ret) {
+			call_user_func_array(array(& $controller, $action), array());
+			$controller->echoEnd();
+		}
 	}
 	
 }

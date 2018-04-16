@@ -1,0 +1,61 @@
+<html>
+	<head>
+		<script src="/scripts/jquery-1.8.3.min.js"></script>
+	</head>
+	
+	<body>
+		<form onsubmit='check()' action="show" method="post">
+		<DIV id=loginPanel align=center>
+			<DIV id=loginMain>
+				<DIV>
+					<TABLE cellSpacing=0 cellPadding=0 width=330 border=0>
+					<TR>
+						<TD align=left width=362 height=25>
+							<LABEL>用户名：
+							<INPUT class=loginInput id="username" name=username> 
+							</LABEL>
+						</TD>
+					</TR>
+					<TR>
+						<TD align=left height=25>
+							<LABEL>密&nbsp;&nbsp;&nbsp;&nbsp;码：
+							<INPUT id="password" type=password name=password>
+							</LABEL>
+						</TD>
+					</TR>
+					<TR>
+						<TD>
+						<span style="margin-right:60px;margin-top:20px;float:right">
+						<input style="width:50px" type=submit value="登录">
+						</span>
+						</TD>
+					</TR>
+					</TABLE>
+				</DIV>
+			</DIV>
+		</DIV>
+		</form>
+		
+		<script language=javascript>
+			function check() {
+				
+				
+				if($('#username').val() == "")
+				{
+					alert('用户名不能为空!');
+					return false;
+				}
+				
+				if($('#username').val() == "")
+				{
+					alert('密码不能为空!');
+					return false;
+				}
+				return true;
+			}
+			
+			$('#username').focus();
+			
+		</script>
+	</body>
+</html>

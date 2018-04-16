@@ -1,51 +1,12 @@
 <?php 
 
+require_once 'ruler.php';
+require_once 'loader.php';
 
 class Controller
 {
 	public $model = null;
 	public $view = null;
-	public $cache = null;
-	public $session = null;
-	
-
-	//name of controller
-	public $name = null;
-	//active action
-	public $action = null;
-
-	public $baseUrl = null; // xxxx/controller
-	public $indexUrl = null; // index url
-	public $ajaxUrl = null;
-
-	public $href = null;
-	public $webroot = null;
-	public $serverPath = null;
-	public $virtualPath = null;
-	public $hostUrl = null;
-	
-	public $stylesUrl = null;  // styles url
-	public $imagesUrl = null;  // images url
-	public $scriptsUrl = null; // scripts url
-	
-
-	public $siteStylesUrl = null;
-	public $siteImagesUrl = null;
-	public $siteScriptsUrl = null;
-	public $siteSwfsUrl = null;
-
-	public $uploadUrl = null;
-
-	//$_GET && $_POST
-	public $params = null;
-	public $uploadFile = null;
-	//arguments by /controller/action/*/*/*
-	public $passargs = null;
-
-	// builtin function name, cannot use as action
-	public $builtins = null;
-
-	public $userData = null;
 	
 	public function __construct()
 	{
@@ -58,79 +19,39 @@ class Controller
 	}
 
 	
-/** 
- * initialize controller
- * 
- * 
- * @return 
- */
-	public function initialize()
+	// 初始化Controller
+	public function initialize(& $ruler)
 	{
-		$modelClass = camelize($this->name) . 'Model';
-		$viewClass = camelize($this->name) . 'View';
-		
-		if(!loadModel($this->serverPath, $this->name))
-		{
-			ethrow("missing model: $modelClass");
+		// 初始化model
+		$modelClass = ucwords($ruler->ctrlName). 'Model';
+		if(!loadModel($ruler->serverPath, ucwords($ruler->ctrlName))) {
+			throw new Exception("missing model: " . $modelClass);
 		}
 
-		if(!class_exists($modelClass))
-		{
-			ethrow("missing model: $modelClass");
-		}
-		
 		$this->model = new $modelClass($this);
 		
-		
-		// allow use default view
-		if(!loadView($this->serverPath, $this->name))
-		{
-			if(!class_exists('AppView'))
-			{
-				ethrow('missing default view: AppView');
+		// 初始化view
+		if(loadView($ruler->serverPath, ucwords($ruler->ctrlName))) {
+			$viewClass  = ucwords($ruler->ctrlName). 'View';
+		} else {
+			if(class_exists("AppView")) {
+				$viewClass = 'AppView';
+			} else {
+				throw new Exception('missing default view: AppView');
 			}
-			
-			// allow use AppView defalut
-			$viewClass = 'AppView';
 		}
-			
-		$this->view = new $viewClass($this);
+		
+		$this->view = new $viewClass($ruler);
 	}
 
 
-	public function composeMenu(){
-		$baseUrl = substr($this->baseUrl, strlen($this->webroot));
-		$sysmenu = SYSMENU_CONFIG::$menu;
-		$sysmenu[0]['isActive'] = true; // 默认第一个菜单活跃
-		
-		foreach ($sysmenu as $menuIndex => & $menu){
-			// 在二级菜单(以及二级扩展菜单)里找
-			foreach ($menu['subMenu'] as $subMenuIndex => & $subMenu) {
-				list($linkBase,) = explode('?', $subMenu['link']);
-				if ($linkBase == $baseUrl 
-					|| $linkBase == $baseUrl.'/'.$this->action 
-					|| ($subMenu['extMenu'] && false !== array_search($baseUrl, $subMenu['extMenu']))
-					|| ($subMenu['extMenu'] && false !== array_search($baseUrl.'/'.$this->action, $subMenu['extMenu']))){
-					
-					// 恢复默认	
-					$sysmenu[0]['isActive'] = false;
-					$subMenu['isActive'] = true;
-					$menu['isActive'] = true;
-					break;
-				}
-			}
-		}
-		return $sysmenu;
-	}
-
-
-/** 
- * get GET/POST param
- * 
- * @param name 
- * 
- * @return 
- */
+	/** 
+	 * get GET/POST param
+	 * 
+	 * @param name 
+	 * 
+	 * @return 
+	 */
 	public function getParam($name)
 	{
 		if(isset($this->params) && isset($this->params[$name]))
@@ -163,28 +84,14 @@ class Controller
 		return isset($this->params[$name]);
 	}
 
-/** 
- * call action directly
- * 
- * @param action 
- * 
- * @return 
- */
-	public function setAction($action)
-	{
-		$this->action = $action;
-		$args = func_get_args();
-		unset($args[0]);
-		call_user_func_array(array(& $this, $action), $args);
-	}
 
 
-/** 
- * redirect to url
- * 
- * 
- * @return 
- */
+	/** 
+	 * redirect to url
+	 * 
+	 * 
+	 * @return 
+	 */
 	public function redirect($url)
 	{
 		if(!$url)
@@ -201,51 +108,7 @@ class Controller
 		header('Location: ' . $url);
 		exit;
 	}
-	
 
-/** 
- * before-filter
- * should override by app
- * 
- * 
- * @return 
- */
-	public function beforeFilter()
-	{
-	}
-	
-
-/** 
- * after-filter
- * should override by app
- * 
- * @return 
- */
-	public function afterFilter()
-	{
-	}
-
-	
-
-	public function &loadModel($serverPath, $modelName)
-	{
-		$serverPath = APP_PATH . DS . $serverPath;
-		$serverPath = preg_replace('/\//', DS, $serverPath);
-		$modelClass = camelize($modelName) . 'Model';
-
-		if(!loadModel($serverPath, $modelName))
-		{
-			ethrow("missing model: $modelClass");
-		}
-
-		if(!class_exists($modelClass))
-		{
-			ethrow("missing model: $modelClass");
-		}
-		
-		$model = new $modelClass($this);
-		return $model;
-	}
 }
 
 	

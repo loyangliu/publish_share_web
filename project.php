@@ -12,7 +12,7 @@ if(!defined('WEBROOT_PATH'))
 
 if(!defined('WEBROOT_DIR'))
 {
-	define('WEBROOT_DIR', basename(WEBROOT_PATH)); //www.loyangliu.com
+	define('WEBROOT_DIR', basename(WEBROOT_PATH));
 }
 
 if(!defined('APP_PATH'))
@@ -62,7 +62,7 @@ if(!defined('CONTROLLER_EXT'))
 
 if(!defined('MODEL_EXT'))
 {
-	define('MODEL_EXT', '.module.php');
+	define('MODEL_EXT', '.model.php');
 }
 
 if(!defined('VIEWER_EXT'))

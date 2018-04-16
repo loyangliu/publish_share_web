@@ -40,7 +40,7 @@ function loadModel($serverPath, $ctrlname)
 
 	loadAppMVC('model');
 
-	$filename = $serverPath . DS . CLASS_DIR . DS . lower($ctrlname) . MODEL_EXT;
+	$filename = $serverPath . DS . CLASS_DIR . DS . strtolower($ctrlname) . MODEL_EXT;
 
 	if(file_exists($filename))
 	{
@@ -63,7 +63,7 @@ function loadView($serverPath, $ctrlname)
 
 	loadAppMVC('view');
 
-	$filename = $serverPath . DS . CLASS_DIR . DS . lower($ctrlname) . VIEWER_EXT;
+	$filename = $serverPath . DS . CLASS_DIR . DS . strtolower($ctrlname) . VIEWER_EXT;
 
 	if(file_exists($filename))
 	{
@@ -101,7 +101,7 @@ function config()
 	$args = func_get_args();
 	foreach($args as $arg)
 	{
-		$filename = APP_CONFIG_PATH . DS . lower($arg) . PHP_EXT;
+		$filename = APP_CONFIG_PATH . DS . strtolower($arg) . PHP_EXT;
 			
 		if(file_exists($filename))
 		{

@@ -1,48 +1,23 @@
 <?php 
 
-if (defined('SCAKE_TEMPLATE_PHP'))
-{
-	return;
-}
-else
-{
-	define('SCAKE_TEMPLATE_PHP', 1);
-}
 
-if(!defined('TEMPLATES_DIR'))
-{
-	define('TEMPLATES_DIR', 'templates');
-}
-
-
-  /** 
-   * template class
-   * 
-   * 
-   * @return 
-   */
+/**
+ * 加载页面
+ *
+ */
 class Template
 {
 	
 	public $vars = array();
 	public $view = null;
 	
-	protected function __construct()
-	{
+	protected function __construct() {
 	}
 	
 	
-/** 
- * instance a object
- * 
- * 
- * @return 
- */
-	public static function & instance()
-	{
+	public static function & instance() {
 		static $_this = null;
-		if(!$_this)
-		{
+		if(!$_this) {
 			$_this = new Template;
 		}
 		
@@ -50,132 +25,12 @@ class Template
 	}
 	
 	
-/** 
- * set view object
- * 
- * @param view 
- * 
- * @return 
- */
-	public function setView(& $view)
-	{
-		Template::instance()->view = & $view;
-	}
-	
-
-/** 
- * assign a variable
- * 
- * @param var 
- * @param value 
- * 
- * @return 
- */
-	public function assign($var, $value)
-	{
-		if(is_array($var))
-		{
-			foreach($var as $key => $val)
-			{
-				$this->vars[$key] = $val;
-			}
-		}
-		else
-		{
-			$this->vars[$var] = $value;
-		}
-	}
-	
-
-	public function assignRef($var, & $value)
-	{
-		$this->vars[$var] = & $value;
-	}
-	
-	
-/** 
- * parse template to php
- * 
- * @param templates 
- * 
- * @return 
- */
-	public function parse($templates)
-	{
-		
-		if(!is_array($templates))
-		{
-			$templates = func_get_args();
-		}
-		
-		extract($this->vars);
-
-		
-		$contents = '';
-		
-		foreach($templates as $templ)
-		{
-			//ob_end_clean();
-			//ob_start();
-			$path = $this->getpath($templ);
-			if(!$path)
-			{
-				ethrow("{$templ} not exist");
-			}
-			include $path;
-			//$content = ob_get_contents();
-			//ob_end_clean();
-			//ob_start();
-			//$contents .= $content;
-		}
-		
-		return false;
-	}
-	
-
-
-	public function fetch($templates)
-	{
-		if(!is_array($templates))
-		{
-			$templates = func_get_args();
-		}
-		
-		extract($this->vars);
-
-		@ob_start();
-		$contents = '';
-		
-		foreach($templates as $templ)
-		{
-			$path = $this->getpath($templ);
-			if(!$path)
-			{
-				ethrow("{$templ} not exist");
-			}
-			
-			include $path;
-		}
-		
-		$contents = @ob_get_contents();
-		@ob_end_clean();
-		return $contents;
-	}
-
 
 
 	// autocase/viewer => autocase/template/viewer.html
 	// default/header => default/template/header.html
-	// footer => /template/footer.html or curctl/template/footer.html
-/** 
- * parse path
- * 
- * @param path 
- * 
- * @return 
- */
-	public function getpath($path)
-	{
+	// footer => /template/footer.html
+	public function getpath($path) {
 		$path = explode("/", $path);
 		$num = count($path);
 		$filename = '';
