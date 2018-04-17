@@ -71,16 +71,14 @@ class Dispatcher
 	{
 		$url = $_SERVER['REQUEST_URI'];
 		
-		if (strpos($url, 'index.php') === false) {
-			$url = '/';
-		} else {
-			$elements = explode('/index.php', $url);
-			$url = $elements[1];
-			if($url == '') {
-				$url = '/';
-			} else if($url[0] != '/') {
-				$url .= '/' . $url;
-			}
+		if (strpos($url, 'index.php')) {
+            $elements = explode('/index.php', $url);
+            $url = $elements[1];
+            if($url == '') {
+                $url = '/';
+            } else if($url[0] != '/') {
+                $url .= '/' . $url;
+            }
 		}
 		
 		return $url;
@@ -120,7 +118,7 @@ class Dispatcher
 	
 			$dir = $serverPath . DS . strtolower($r[1]);
 			$filename = $dir . DS . CLASS_DIR . DS . strtolower($r[1]) . CONTROLLER_EXT;
-			
+
 			if (!file_exists($dir)) { // 本地目录根本不存在，可能被攻击，直接拒绝
 				return array(null,null);
 			}
