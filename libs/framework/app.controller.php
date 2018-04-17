@@ -22,12 +22,12 @@ class AppController extends Controller {
 	
 	// 登录态校验
 	public function loginCheck() {
-		$session = Session::getInstance();
+		/*$session = Session::getInstance();
 		
 		if(!$session->get("userid")) {
 			Dispatcher::instance()->dispatch("/system/user/login");
 			return false;
-		}
+		}*/
 		
 		return true;
 	}
