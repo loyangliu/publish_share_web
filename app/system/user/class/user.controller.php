@@ -15,9 +15,21 @@ class UserController extends AppController {
 	}
 	
 	public function show() {
-		$username = $_POST["username"];
-		$password = $_POST["password"];
-		echo "username=" . $username . "; password=" . $password;
+		
+		if (isset($_POST) && isset($_POST["username"])) {
+			$username = $_POST["username"];
+		}
+		if (isset($_POST) && isset($_POST["password"])) {
+			$password = $_POST["password"];
+		}
+		
+		if (isset($username) && isset($password)) {
+			echo "username=" . $username . "; password=" . $password;
+		} else {
+			echo "username, password";
+		}
+		
+		//$this->redirect("http://www.loyangliu.com");
 	}
 }
 

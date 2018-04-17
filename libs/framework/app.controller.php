@@ -18,6 +18,13 @@ class AppController extends Controller {
 	
 	public function initialize(&$ruler) {
 		parent::initialize($ruler);
+		
+		$this->render();
+	}
+	
+	// 向View传入默认参数
+	private function render() {
+		$this->view->assign("test", "testval");
 	}
 	
 	// 登录态校验

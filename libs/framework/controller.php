@@ -42,6 +42,7 @@ class Controller
 		}
 		
 		$this->view = new $viewClass($ruler);
+		
 	}
 
 
@@ -67,7 +68,7 @@ class Controller
 			}
 			
 			return trim($this->params[$name]);
-		}		
+		}
 
 		return false;
 	}
@@ -97,11 +98,6 @@ class Controller
 		if(!$url)
 		{
 			return;
-		}
-		
-		if($url && $url[0] != '/')
-		{
-			$url = env('SCRIPT_NAME') . '/' . $url;
 		}
 		
 		header('HTTP/1.1 200 OK');

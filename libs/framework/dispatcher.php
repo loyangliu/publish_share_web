@@ -71,9 +71,7 @@ class Dispatcher
 	{
 		$url = $_SERVER['REQUEST_URI'];
 		
-		if (strpos($url, 'index.php') === false) {
-			$url = '/';
-		} else {
+		if (strpos($url, 'index.php')) {
 			$elements = explode('/index.php', $url);
 			$url = $elements[1];
 			if($url == '') {
