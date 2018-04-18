@@ -186,8 +186,7 @@ class Dispatcher
 	/** 
 	 * 模块执行入口
 	 */
-	protected function invoke(& $controller, $action)
-	{
+	protected function invoke(& $controller, $action) {
 		$ret = $controller->loginCheck();
 		
 		if($ret) {

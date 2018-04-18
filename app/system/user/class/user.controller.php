@@ -4,6 +4,9 @@
  * User 模块
  * 
  */
+
+require_once WEBROOT_PATH . '/libs/base/session.php';
+
 class UserController extends AppController {
 	
 	public function loginCheck() {
@@ -14,7 +17,7 @@ class UserController extends AppController {
 		$this->view->display("login");
 	}
 	
-	public function show() {
+	public function doLogin() {
 		
 		if (isset($_POST) && isset($_POST["username"])) {
 			$username = $_POST["username"];
@@ -24,12 +27,14 @@ class UserController extends AppController {
 		}
 		
 		if (isset($username) && isset($password)) {
-			echo "username=" . $username . "; password=" . $password;
-		} else {
-			echo "username, password";
+			$ret = $this->model->checkLogin($username, $password);
+			if($ret) {
+				$session = Session::getInstance();
+				$session->set("userid", $ret["uid"]);
+			}
 		}
 		
-		//$this->redirect("http://www.loyangliu.com");
+		$this->redirect("/");
 	}
 }
 

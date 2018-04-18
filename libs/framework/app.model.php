@@ -1,26 +1,20 @@
 <?php 
 
+require_once WEBROOT_PATH . '/libs/db/dbfactory.php';
 
-if (defined('SCAKE_APP_MODEL_PHP'))
-{
-	return;
-}
-else
-{
-	define('SCAKE_APP_MODEL_PHP', 1);
-}
-
-
-  /**
-   * app model base class
-   *
-   * can override by /app/libs/app.model.php
-   * 
-   */
-class AppModel extends Model
-{
-	public function __construct($controller) {
-		parent::__construct($controller);
+/**
+ * App通用 Model 类
+ */
+class AppModel extends Model {
+	public $db = null;
+	
+	public function __construct() {
+		parent::__construct();
+		$this->init();
+	}
+	
+	private function init() {
+		$this->db = DbFactory::instance()->createDBO('test');
 	}
 }
 
