@@ -18,3 +18,6 @@ http://www.loyangliu.com
 
 3. 2018-04-18 更新
 增加db模块
+
+4. 2018-04-19 更新
+增加redis模块
