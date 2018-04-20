@@ -28,7 +28,7 @@ class Controller
 			throw new Exception("missing model: " . $modelClass);
 		}
 
-		$this->model = new $modelClass($this);
+		$this->model = new $modelClass();
 		
 		// 初始化view
 		if(loadView($ruler->serverPath, ucwords($ruler->ctrlName))) {
@@ -42,6 +42,7 @@ class Controller
 		}
 		
 		$this->view = new $viewClass($ruler);
+		
 	}
 
 
@@ -67,7 +68,7 @@ class Controller
 			}
 			
 			return trim($this->params[$name]);
-		}		
+		}
 
 		return false;
 	}
@@ -99,14 +100,11 @@ class Controller
 			return;
 		}
 		
-		if($url && $url[0] != '/')
-		{
-			$url = env('SCRIPT_NAME') . '/' . $url;
+		if($url && $url[0]!='/') {
+			$url = '/' . $url;
 		}
-		
 		header('HTTP/1.1 200 OK');
-		header('Location: ' . $url);
-		exit;
+		header('Location: ' . BASE_URL . $url);
 	}
 
 }

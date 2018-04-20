@@ -15,3 +15,9 @@ http://www.loyangliu.com/index.php/ajax/default/index
 (3) MVC框架
 测试路径：
 http://www.loyangliu.com
+
+3. 2018-04-18 更新
+增加db模块
+
+4. 2018-04-19 更新
+增加redis模块

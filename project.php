@@ -4,6 +4,10 @@ if(!defined('DS'))
 	define('DS', DIRECTORY_SEPARATOR);
 }
 
+if(!defined('BASE_URL'))
+{
+	define('BASE_URL', "/index.php");
+}
 
 if(!defined('WEBROOT_PATH'))
 {
@@ -94,5 +98,6 @@ if(!defined('SDL_CHECK'))
 	define('SDL_CHECK', 1);
 }
 
-include_once 'libs/framework/loader.php';
-include_once 'libs/framework/dispatcher.php';
+require_once 'libs/framework/loader.php';
+require_once'libs/framework/dispatcher.php';
+require_once'libs/base/functions.php';
