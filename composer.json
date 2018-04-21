@@ -1,0 +1,12 @@
+{
+    "name": "vagrant/psw",
+    "require": {
+        "guzzlehttp/guzzle": "^6.3"
+    },
+    "autoload": {
+        "files": ["libs/base/functions.php"],
+        "psr-4": {
+            "tools\\": "tools/"
+        }
+    }
+}
