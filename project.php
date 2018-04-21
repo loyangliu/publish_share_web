@@ -1,4 +1,7 @@
-<?php 
+<?php
+
+date_default_timezone_set('PRC');
+
 if(!defined('DS'))
 {
 	define('DS', DIRECTORY_SEPARATOR);

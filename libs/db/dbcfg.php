@@ -10,10 +10,10 @@ class DATABASE_CONFIG {
 		// default(function test) database
 		'default' => array (
 			'type' => 'mysqli',
-			'host' => '192.168.111.128',
-			'user' => 'root',
-			'psw' => 'liuyang',
-			'database' => 'db_att_plat' 
+			'host' => '127.0.0.1',
+			'user' => 'homestead',
+			'psw' => 'secret',
+			'database' => 'public_share'
 		),
 		// autotest database
 		'autotest' => array (

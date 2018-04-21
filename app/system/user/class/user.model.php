@@ -5,7 +5,7 @@ require_once WEBROOT_PATH . '/libs/db/dbfactory.php';
 class UserModel extends AppModel {
 	
 	public function __construct() {
-		$this->db = DbFactory::instance()->createDBO('test');
+		$this->db = DbFactory::instance()->createDBO('default');
 	}
 	
 	public function checkLogin($name, $password) {

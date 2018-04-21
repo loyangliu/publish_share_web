@@ -25,9 +25,9 @@
  exit;
  Dispatcher::dispatch($rout);
  */
- 
- 
- 
+
+
+ require __DIR__.'/vendor/autoload.php';
  
  include_once 'project.php';
  

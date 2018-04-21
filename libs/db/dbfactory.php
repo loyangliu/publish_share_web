@@ -44,7 +44,7 @@ class DbFactory
 		foreach(DATABASE_CONFIG::$databases as $key => $dbconfig) {
 			if(!isset($this->dbset[$key])) {
 				if ($dbo = $this->loadDBO($dbconfig)) {
-					$this->dbset[$key] = & $dbo;
+					$this->dbset[$key] = $dbo;
 				}
 			}
 		}

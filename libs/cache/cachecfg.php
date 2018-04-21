@@ -19,9 +19,9 @@ class CACHE_CONFIG
 			'redis' => array(
 				'type' => 'redis',
 				'classname' => 'RedisCache',
-				'ip' => '192.168.111.128',
+				'ip' => '127.0.0.1',
 				'port' => 6379,
-				'pass' => 'liuyang',
+				'pass' => '',
 				'defaultLifeTime' => 86400
 				),
 			
