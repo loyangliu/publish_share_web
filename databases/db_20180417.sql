@@ -18,8 +18,24 @@ create table users (
   primary key (id)
 ) engine=innodb default charset=utf8;
 
+-- 帖子
 create table articles (
   id int(11) unsigned not null auto_increment,
+  name varchar(255) not null,
+  description text,
+  user_id int(11) not null,
+  publish_at datetime,
+  create_at datetime,
+  update_at datetime,
+  delete_at datetime,
+  primary key (id)
+) engine=innodb default charset=utf8;
 
+-- 帖子图片
+create table article_images (
+  id int(11) unsigned not null auto_increment,
+  article_id int(11) unsigned not null,
+  image_path varchar(100) not null,
+  seq int(11) not null default 0,
   primary key (id)
 ) engine=innodb default charset=utf8;

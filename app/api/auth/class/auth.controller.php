@@ -17,6 +17,6 @@ class AuthController extends AppController
             return;
         }
 
-        echo apiJson(0, '登录成功！', ['user' => $user]);
+        echo apiJson(0, '登录成功', ['user' => $user]);
     }
 }

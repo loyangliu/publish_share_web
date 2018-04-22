@@ -505,7 +505,10 @@ class DB_MySQLi extends DBO
 		foreach ($data as $key => $val)
 		{
 			$names .= "`" . $key . '`,';
-			$values .= "'" . $this->escape($val) . "',";
+
+            $val = $val === null ? 'null' : '\'' . $this->escape($val) . '\'';
+
+			$values .= $val . ',';
 			//$values .= "'" .$this->escape($val);
 		}
 		$names = preg_replace('/,$/', '', $names);

@@ -5,15 +5,18 @@
  *
  */
 
+// 数据库配置初始化
+DATABASE_CONFIG::init();
+
 class DATABASE_CONFIG {
 	public static $databases = array (
 		// default(function test) database
 		'default' => array (
 			'type' => 'mysqli',
-			'host' => '127.0.0.1',
-			'user' => 'homestead',
-			'psw' => 'secret',
-			'database' => 'public_share'
+			'host' => '192.168.111.128',
+			'user' => 'root',
+			'psw' => 'liuyang',
+			'database' => 'db_att_plat'
 		),
 		// autotest database
 		'autotest' => array (
@@ -21,7 +24,7 @@ class DATABASE_CONFIG {
 			'host' => '192.168.111.128',
 			'user' => 'root',
 			'psw' => 'liuyang',
-			'database' => 'db_att_auto' 
+			'database' => 'db_att_auto'
 		),
 		// test database
 		'test' => array (
@@ -32,4 +35,18 @@ class DATABASE_CONFIG {
 				'database' => 'wiki'
 		),
 	);
+
+    /**
+     * 初始化数据库配置
+     */
+	static public function init()
+    {
+        self::$databases['default'] = [
+            'type' => getenv('DB_CONNECTION'),
+            'host' => getenv('DB_HOST'),
+            'user' => getenv('DB_USERNAME'),
+            'psw' => getenv('DB_PASSWORD'),
+            'database' => getenv('DB_DATABASE')
+        ];
+    }
 }
