@@ -1,7 +1,12 @@
 <?php
 
-class ArticleController extends AppController
+class ArticlesController extends AppController
 {
+    // 开启认证，并忽略
+    public $apiAuth = [
+        'check' => true,
+        'checkIgnoreActions' => ['home']
+    ];
 
     /**
      * 上传图片
@@ -77,9 +82,7 @@ class ArticleController extends AppController
     {
         $startId = intval($_GET['offsetId']);// 帖子开始id，防止因数据库新增数据，引起页码偏移，导致重复加载数据
         $page = intval($_GET['page']);// 页
-
         $articles = $this->model->getHomeArticlesWithAll($startId, $page);
-
         echo apiJson(0, null, ['articles' => $articles]);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-class ArticleModel extends AppModel
+class ArticlesModel extends AppModel
 {
     /**
      * 发布帖子
@@ -17,7 +17,7 @@ class ArticleModel extends AppModel
             'create_at' => $time,
             'update_at' => $time,
             'delete_at' => null,
-            'user_id' => 0,
+            'user_id' => $this->apiAuth['user']['id'],
         ];
 
         $this->db->autoCommit(false);

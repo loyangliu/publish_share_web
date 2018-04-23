@@ -12,13 +12,36 @@ require_once WEBROOT_PATH . '/libs/framework/dispatcher.php';
  */
 class AppController extends Controller {
 
-	public function __construct() {
-		parent::__construct();
+    public $apiAuth = [
+        'check' => false,
+        'checkIgnoreActions' => [],
+        'user' => false
+    ];
+
+    public function apiAuth()
+    {
+        // api_token
+        $api_token = addslashes($_REQUEST['api_token']);
+        if($api_token){
+            $this->apiAuth['user'] = $this->model->db->getRow("select * from users where api_token='{$api_token}'");
+        }
+
+        // 开启了api认证
+        if($this->apiAuth['check'] && !in_array($this->ruler->actionName, $this->apiAuth['checkIgnoreActions'])){
+            if($this->apiAuth['user'] == false){
+                echo apiJson(1000, '未认证');
+                exit;
+            }
+        }
+
+        $this->model->apiAuth = $this->apiAuth;
 	}
 	
 	public function initialize(&$ruler) {
 		parent::initialize($ruler);
-		
+		$this->ruler = $ruler;
+        $this->apiAuth();
+
 		$this->render();
 	}
 	
