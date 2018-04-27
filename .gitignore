@@ -2,5 +2,4 @@
 /.idea
 /.settings
 .env
-/storage/article_images
-/storage/article_thumbnail_images
+composer.lock
