@@ -270,7 +270,7 @@ class ArticlesModel extends AppModel
         $img->fit($size, $size);
         $savePath = $this->getThumbnailImageRootDir() . '/' . $path;
         $dirname = dirname($savePath);
-        is_dir($dirname) or mkdir($dirname);
+        is_dir($dirname) or mkdir($dirname, null, true);
         $img->save($savePath);
     }
 }

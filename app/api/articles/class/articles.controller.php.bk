@@ -5,12 +5,8 @@ class ArticlesController extends AppController
     // 开启认证，并忽略
     public $apiAuth = [
         'check' => true,
-        'checkIgnoreActions' => ['home', 'test', 'uploadImage']
+        'checkIgnoreActions' => ['home']
     ];
-
-	public function test(){
-		$this->view->display('test');
-	}
 
     /**
      * 上传图片
@@ -22,6 +18,7 @@ class ArticlesController extends AppController
         $parentDir =  date('Ymd');
         $dir = $dirRoot . '/' . $parentDir;
         is_dir($dir) or mkdir($dir);
+	p('a');exit;
 
         $file = new \Upload\File('image', new \Upload\Storage\FileSystem($dir));
         $new_filename = uniqid();
