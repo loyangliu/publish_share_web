@@ -2,15 +2,39 @@
 
 class ArticlesController extends AppController
 {
-    // 开启认证，并忽略
-    public $apiAuth = [
-        'check' => true,
-        'checkIgnoreActions' => ['home', 'test', 'uploadImage']
-    ];
+    /**
+     * 业务侧根据需要重载自定义登录态验证
+     */
+    public function loginCheck() {
+    	$needCheckActions =  ['publish', 'uploadImage'];
+    	if( in_array($this->ruler->actionName, $needCheckActions) ) {
+    		$api_token = addslashes($_REQUEST['api_token']);
+    		if($api_token){
+    			$user = $this->model->db->getRow("select * from users where api_token='{$api_token}'");
+    			if(!$user){
+    				echo apiJson(1000, '未认证');
+    				return false;
+    			}
+    		} else {
+    			echo apiJson(1001, '未知的登录态参数');
+    			return false;
+    		}
+    	}
+    	
+    	return true;
+    }
+    
+    /**
+     * 获取帖子
+     */
+    public function home()
+    {
+    	$startId = intval($_GET['offsetId']);// 帖子开始id，防止因数据库新增数据，引起页码偏移，导致重复加载数据
+    	$page = intval($_GET['page']);// 页
+    	$articles = $this->model->getHomeArticlesWithAll($startId, $page);
+    	echo apiJson(0, null, ['articles' => $articles]);
+    }
 
-	public function test(){
-		$this->view->display('test');
-	}
 
     /**
      * 上传图片

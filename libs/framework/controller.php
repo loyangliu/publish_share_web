@@ -7,6 +7,7 @@ class Controller
 {
 	public $model = null;
 	public $view = null;
+	public $ruler = null;
 	
 	public function __construct()
 	{
@@ -43,6 +44,7 @@ class Controller
 		
 		$this->view = new $viewClass($ruler);
 		
+		$this->ruler = $ruler;
 	}
 
 

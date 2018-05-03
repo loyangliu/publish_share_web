@@ -11,7 +11,6 @@ class AuthController extends AppController
         // 认证
         $user = $this->model->authorizationWX($data);
 
-        // 认证
         if(!$user){
             echo apiJson(1, '登录失败！');
             return;

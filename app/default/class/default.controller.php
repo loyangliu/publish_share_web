@@ -12,7 +12,6 @@ class DefaultController extends AppController {
 		$redisVal = $this->model->testRedisGet();
 		
 		echo "default-index page</br>";
-		echo "userid=" . $userid . "</br>";
 		echo "redisVal=" . $redisVal. "</br>";
 	}
 }

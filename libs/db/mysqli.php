@@ -506,7 +506,7 @@ class DB_MySQLi extends DBO
 		{
 			$names .= "`" . $key . '`,';
 
-            $val = $val === null ? 'null' : '\'' . $this->escape($val) . '\'';
+			$val = $val === null ? 'null' : '\'' . $this->escape($val) . '\'';
 
 			$values .= $val . ',';
 			//$values .= "'" .$this->escape($val);

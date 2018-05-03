@@ -4,7 +4,7 @@ require_once WEBROOT_PATH . '/libs/db/dbfactory.php';
 
 class UserModel extends AppModel {
 	
-	public function __construct() {
+	protected function init() {
 		$this->db = DbFactory::instance()->createDBO('default');
 	}
 	

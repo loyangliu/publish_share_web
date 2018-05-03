@@ -15,10 +15,8 @@ class AppModel extends Model {
 		$this->init();
 	}
 	
-	private function init() {
+	protected function init() {
 		$this->db = DbFactory::instance()->createDBO('default');
-		/*$this->cache = CacheFactory::instance()->createCache('test');
-		$this->cache->init();*/
 	}
 }
 

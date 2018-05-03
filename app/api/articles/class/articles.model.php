@@ -2,6 +2,13 @@
 
 class ArticlesModel extends AppModel
 {
+	/**
+	 * 重载init，初始化数据库
+	 */
+	protected function init() {
+		$this->db = DbFactory::instance()->createDBO('publish_share');
+	}
+	
     /**
      * 发布帖子
      * @param $data
