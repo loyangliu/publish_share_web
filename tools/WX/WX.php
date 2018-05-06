@@ -9,7 +9,7 @@ require_once WEBROOT_PATH . '/tools/WX/wxBizDataCrypt/wxBizDataCrypt.php';
 class WX {
 
     private $AppID = 'wxbca0fbd15a965bdf';
-    private $AppSecret = '139f496c94214a8485598508ecc373b7';
+    private $AppSecret = '92b4d56fcc68fd859580419d2604adcf';
     private $authorizationUrl = 'https://api.weixin.qq.com/sns/jscode2session';
 
     public function __construct()
