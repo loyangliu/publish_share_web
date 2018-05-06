@@ -20,7 +20,7 @@ class AuthController extends AppController
 		echo apiJson(1000, '未认证');
 	}
 	
-	// 登录
+	// 根据code转换用户信息
     public function login() {
         $data = array_map(function($v){
             return addslashes(trim($v));

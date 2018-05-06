@@ -8,8 +8,8 @@ class AuthModel extends AppModel
 
         $this->wx = new \tools\WX\WX;
     }
-
-	/**
+    
+    /**
      * 重载init，初始化数据库
      */
     protected function init() {

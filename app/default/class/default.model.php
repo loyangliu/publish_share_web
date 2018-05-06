@@ -12,6 +12,7 @@ class DefaultModel extends AppModel {
 	}
 	
 	public function testRedisGet() {
+		$this->log("testRedisGet");
 		return $this->cache->get("testkey");
 	}
 	
