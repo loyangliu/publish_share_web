@@ -24,7 +24,7 @@ class ArticlesModel extends AppModel
             'create_at' => $time,
             'update_at' => $time,
             'delete_at' => null,
-            'user_id' => $this->apiAuth['user']['id'],
+            'user_id' => $data['userid'],
         ];
 
         $this->db->autoCommit(false);

@@ -91,8 +91,13 @@ class ArticlesController extends AppController
         if(!$params['description']){
             echo apiJson(-1, '描述不能为空！');return;
         }
+        
+        if(!$params['userid']){
+            echo apiJson(-1, 'user_id不能为空！');return;
+        }
 
         $data = [
+            'userid' => $params['userid'],
             'name' => $params['name'],
             'description' => $params['description'],
             'images' => json_decode($_POST['images'])
