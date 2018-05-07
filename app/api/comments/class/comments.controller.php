@@ -30,7 +30,7 @@ class CommentsController extends AppController {
 			return addslashes(trim($v));
 		}, $_POST);
 		
-		$this->log(json_encode($params));
+		$this->model->log(json_encode($params));
 			
 		if(!isset($params['article_id'])){
 			echo apiJson(-1, 'article_id 不能为空！');return;
