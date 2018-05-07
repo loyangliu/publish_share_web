@@ -29,20 +29,22 @@ class CommentsController extends AppController {
 		$params = array_map(function($v){
 			return addslashes(trim($v));
 		}, $_POST);
+		
+		$this->log(json_encode($params));
 			
-		if(!$params['article_id']){
+		if(!isset($params['article_id'])){
 			echo apiJson(-1, 'article_id 不能为空！');return;
 		}
 		
-		if(!$params['from']){
+		if(!isset($params['from'])){
 			echo apiJson(-1, 'from 不能为空！');return;
 		}
 		
-		if(!$params['to']){
+		if(!isset($params['to'])){
 			echo apiJson(-1, 'to 不能为空！');return;
 		}
 		
-		if(!$params['message']){
+		if(!isset($params['message'])){
 			echo apiJson(-1, 'message 不能为空！');return;
 		}
 		
