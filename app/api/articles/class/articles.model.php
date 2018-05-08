@@ -168,6 +168,9 @@ class ArticlesModel extends AppModel
 
         // 加载图片
         $this->articlesWithImage($articles['data']);
+        
+        // 加载留言
+        $this->articlesWithComments($articles['data']);
 
         return $articles;
     }
@@ -264,6 +267,33 @@ class ArticlesModel extends AppModel
                 $article['images'] = isset($images[$article['id']]) ? $images[$article['id']] : [];
             }
         }
+    }
+    
+    /**
+     * 加载留言
+     * @param $articles
+     */
+    public function articlesWithComments(& $articles) {
+    	if($articles) {
+    		$ids = array_column($articles, 'id');
+    		$in = implode(',', $ids);
+    		$rows = $this->db->getAll("select * from comments where article_id in ({$in})");
+    		
+    		$comments = [];
+    		foreach($rows as $row) {
+    			$comments[$row['article_id']][] = array(
+    					'article_id'=>$row['article_id'],
+    					'from'=>$row['from'],
+    					'to'=>$row['to'],
+    					'message'=>$row['message'],
+    					'commit_at'=>$row['commit_at']
+    			);
+    		}
+    		
+    		foreach($articles as $article) {
+    			$article['comments'] = isset($comments[$article['article_id']]) ? $comments[$article['article_id']] : [];
+    		}
+    	}
     }
 
     /**
