@@ -291,7 +291,7 @@ class ArticlesModel extends AppModel
     		}
     		
     		foreach($articles as & $article) {
-    			$article['comments'] = isset($comments[$article['article_id']]) ? $comments[$article['article_id']] : [];
+    			$article['comments'] = isset($comments[$article['id']]) ? $comments[$article['id']] : [];
     		}
     	}
     }
