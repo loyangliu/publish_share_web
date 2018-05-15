@@ -105,9 +105,6 @@ require_once 'libs/framework/loader.php';
 require_once'libs/framework/dispatcher.php';
 require_once'libs/base/functions.php';
 
-\Carbon\Carbon::setLocale('zh');
-
-$dotenv = new \Dotenv\Dotenv(__DIR__);
-$dotenv->load();
+\Carbon\Carbon::setLocale('zh'); 
 
 error_reporting(E_ALL & ~E_NOTICE);

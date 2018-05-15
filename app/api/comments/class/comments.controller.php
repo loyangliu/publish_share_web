@@ -4,7 +4,7 @@ class CommentsController extends AppController {
 	 * 业务侧根据需要重载自定义登录态验证
 	 */
 	public function loginCheck() {
-		$needCheckActions =  ['publish'];
+		$needCheckActions =  ['publish', 'prise'];
 		if( in_array($this->ruler->actionName, $needCheckActions) ) {
 			$api_token = addslashes($_REQUEST['api_token']);
 			if($api_token){
@@ -56,6 +56,40 @@ class CommentsController extends AppController {
 		];
 		
 		$this->model->publish($data);
+		
+		echo apiJson(0, '发布成功！');
+	}
+	
+	/**
+	 * 提交点赞
+	 */
+	public function prise() {
+		$params = array_map(function($e){
+			return addslashes(trim($e));
+		}, $_POST);
+		
+		if(!isset($params['article_id'])){
+			echo apiJson(-1, 'article_id 不能为空！');return;
+		}
+		
+		if(!isset($params['from'])){
+			echo apiJson(-1, 'from 不能为空！');return;
+		}
+		
+		$prises = $this->model->getStars($params['article_id']);
+		$froms = array_column($prises, 'from');
+		
+		if(in_array($params['from'], $froms)) {
+			echo apiJson(-1, '已经点赞！');
+			return;
+		}
+		
+		$data = [
+				'article_id' => $params['article_id'],
+				'from' => $params['from']
+		];
+		
+		$this->model->prise($data);
 		
 		echo apiJson(0, '发布成功！');
 	}

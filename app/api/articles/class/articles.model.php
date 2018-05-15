@@ -171,6 +171,9 @@ class ArticlesModel extends AppModel
         
         // 加载留言
         $this->articlesWithComments($articles['data']);
+        
+        // 加载点赞
+        $this->articleWithStars($articles['data']);
 
         return $articles;
     }
@@ -293,6 +296,35 @@ class ArticlesModel extends AppModel
     		foreach($articles as & $article) {
     			$article['comments'] = isset($comments[$article['id']]) ? $comments[$article['id']] : [];
     		}
+    	}
+    }
+    
+    /**
+     * 加载留言
+     * @param $articles
+     */
+    public function articleWithStars(& $articles) {
+    	if($articles) {
+    		$ids = array_column($articles, 'id');
+    		$in = implode(',', $ids);
+    		$rows = $this->db->getAll("select * from stars where article_id in ({$in})");
+    		
+    		$stars = [];
+			foreach ($rows as $row) {
+				$froms = isset($stars[$row['article_id']]) ? array_column($stars[$row['article_id']], 'from') : [];
+				
+				if(!in_array($row['from'], $froms)) {
+					$stars[$row['article_id']][] = array(
+							'article_id' => $row['article_id'],
+							'from' => $row['from'],
+							'commit_at' => $row['commit_at']
+					);
+				}
+			}
+			
+			foreach ($articles as & $article) {
+				$article['prises'] = isset($stars[$article['id']]) ? $stars[$article['id']] : [];
+			}
     	}
     }
 
