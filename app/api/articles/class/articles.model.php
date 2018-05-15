@@ -2,6 +2,8 @@
 
 class ArticlesModel extends AppModel
 {
+	const STATIC_RES_URL = "https://www.loyangliu.com";
+	
 	/**
 	 * 重载init，初始化数据库
 	 */
@@ -233,12 +235,12 @@ class ArticlesModel extends AppModel
 
     public function getImageUrl($path)
     {
-        return getenv('APP_URL') .'/'. $this->getImageDir() . '/' . $path;
+    	return self::STATIC_RES_URL.'/'. $this->getImageDir() . '/' . $path;
     }
 
     public function getThumbnailImageUrl($path)
     {
-        return getenv('APP_URL') . '/' . $this->getThumbnailImageDir() . '/' . $path;
+    	return self::STATIC_RES_URL. '/' . $this->getThumbnailImageDir() . '/' . $path;
     }
 
     /**
