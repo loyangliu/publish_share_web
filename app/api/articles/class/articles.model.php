@@ -3,7 +3,7 @@
 class ArticlesModel extends AppModel
 {
 	const STATIC_RES_URL = "https://www.loyangliu.com";
-	
+
 	/**
 	 * 重载init，初始化数据库
 	 */
@@ -173,7 +173,18 @@ class ArticlesModel extends AppModel
         
         // 加载留言
         $this->articlesWithComments($articles['data']);
-        
+
+        // 加载关注信息
+        if($this->user && $articles['data']){
+            $ids = array_column($articles['data'], 'id');
+            $in = implode(',', $ids);
+            $subscribes = $this->db->getCol("select article_id from subscribe where user_id={$this->user['id']} and article_id in ({$in})");
+            foreach($articles['data'] as & $article){
+                $article['isSubscribe'] = in_array($article['id'], $subscribes);
+            }
+            unset($article);
+        }
+
         // 加载点赞
         $this->articleWithStars($articles['data']);
 
@@ -300,7 +311,7 @@ class ArticlesModel extends AppModel
     		}
     	}
     }
-    
+
     /**
      * 加载留言
      * @param $articles
@@ -310,11 +321,11 @@ class ArticlesModel extends AppModel
     		$ids = array_column($articles, 'id');
     		$in = implode(',', $ids);
     		$rows = $this->db->getAll("select * from stars where article_id in ({$in})");
-    		
+
     		$stars = [];
 			foreach ($rows as $row) {
 				$froms = isset($stars[$row['article_id']]) ? array_column($stars[$row['article_id']], 'from') : [];
-				
+
 				if(!in_array($row['from'], $froms)) {
 					$stars[$row['article_id']][] = array(
 							'article_id' => $row['article_id'],
@@ -323,7 +334,7 @@ class ArticlesModel extends AppModel
 					);
 				}
 			}
-			
+
 			foreach ($articles as & $article) {
 				$article['prises'] = isset($stars[$article['id']]) ? $stars[$article['id']] : [];
 			}
@@ -343,5 +354,50 @@ class ArticlesModel extends AppModel
         $dirname = dirname($savePath);
         is_dir($dirname) or mkdir($dirname);
         $img->save($savePath);
+    }
+
+    /**
+     * 获取一个帖子
+     * @param $id
+     * @return mixed
+     */
+    public function find($id)
+    {
+        return $this->db->getRow("select id from articles where id='{$id}' and delete_at is null");
+    }
+
+    /**
+     * 获取关注信息
+     * @param $userId
+     * @param $articleId
+     * @return mixed
+     */
+    public function getUserSubscribe($userId, $articleId)
+    {
+        return $this->db->getRow("select * from subscribe where user_id='{$userId}' and article_id='{$articleId}'");
+    }
+
+    /**
+     * 关注帖子
+     * @param $userId
+     * @param $articleId
+     */
+    public function subscribe($userId, $articleId)
+    {
+        $this->db->insert([
+            'user_id' => $userId,
+            'article_id' => $articleId,
+            'subscribe_time' => date('Y-m-d H:i:s')
+        ], 'subscribe');
+    }
+
+    /**
+     * 取消关注
+     * @param $userId
+     * @param $articleId
+     */
+    public function cancelSubscribe($userId, $articleId)
+    {
+        $this->db->query("delete from subscribe where user_id='{$userId}' and article_id='{$articleId}'");
     }
 }

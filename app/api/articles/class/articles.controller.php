@@ -6,20 +6,14 @@ class ArticlesController extends AppController
      * 业务侧根据需要重载自定义登录态验证
      */
     public function loginCheck() {
-    	$needCheckActions =  ['publish', 'uploadImage'];
-    	if( in_array($this->ruler->actionName, $needCheckActions) ) {
-    		$api_token = addslashes($_REQUEST['api_token']);
-    		if($api_token){
-    			$user = $this->model->db->getRow("select * from users where api_token='{$api_token}'");
-    			if(!$user){
-    				echo apiJson(1000, '未认证');
-    				return false;
-    			}
-    		} else {
-    			echo apiJson(1001, '未知的登录态参数');
-    			return false;
-    		}
-    	}
+        $api_token = addslashes($_REQUEST['api_token']);
+        $this->model->user = $this->user = $api_token ? $this->model->db->getRow("select * from users where api_token='{$api_token}'") : false;
+
+        $needCheckActions =  ['publish', 'uploadImage', 'subscribe'];
+        if(in_array($this->ruler->actionName, $needCheckActions) && !$this->user){
+            echo apiJson(1000, '未认证');
+            return false;
+        }
     	
     	return true;
     }
@@ -108,5 +102,45 @@ class ArticlesController extends AppController
         echo apiJson(0, '发布成功！');
     }
 
-    
+    /**
+     * 关注帖子
+     */
+    public function subscribe()
+    {
+        $articleId = intval($_POST['article_id']);
+        if(!$articleId || !$article = $this->model->find($articleId)){
+            echo apiJson(-1, '帖子被删除了！');
+            return;
+        }
+
+        // 已关注
+        if($this->model->getUserSubscribe($this->user['id'], $articleId)){
+            echo apiJson(0, '已关注！');
+            return;
+        }
+
+        $this->model->subscribe($this->user['id'], $articleId);
+        echo apiJson(0);
+    }
+
+    /**
+     * 取消关注
+     */
+    public function cancenSubscribe()
+    {
+        $articleId = intval($_POST['article_id']);
+        if(!$articleId || !$article = $this->model->find($articleId)){
+            echo apiJson(-1, '帖子被删除了！');
+            return;
+        }
+
+        // 已关注
+        if(!$this->model->getUserSubscribe($this->user['id'], $articleId)){
+            echo apiJson(0, '尚未关注！');
+            return;
+        }
+
+        $this->model->cancelSubscribe($this->user['id'], $articleId);
+        echo apiJson(0);
+    }
 }

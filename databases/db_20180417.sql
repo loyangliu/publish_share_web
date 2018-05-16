@@ -39,3 +39,12 @@ create table article_images (
   seq int(11) not null default 0,
   primary key (id)
 ) engine=innodb default charset=utf8;
+
+-- 帖子订阅
+create table subscribe (
+  id int(11) unsigned not null auto_increment,
+  article_id int(11) unsigned not null,
+  user_id int(11) unsigned not null,
+  subscribe_time datetime,
+  primary key (id)
+) engine=innodb default charset=utf8;
