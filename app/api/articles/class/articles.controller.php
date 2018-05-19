@@ -6,14 +6,16 @@ class ArticlesController extends AppController
      * 业务侧根据需要重载自定义登录态验证
      */
     public function loginCheck() {
-        $api_token = addslashes($_REQUEST['api_token']);
-        $this->model->user = $this->user = $api_token ? $this->model->db->getRow("select * from users where api_token='{$api_token}'") : false;
-
-        $needCheckActions =  ['publish', 'uploadImage', 'subscribe'];
-        if(in_array($this->ruler->actionName, $needCheckActions) && !$this->user){
-            echo apiJson(1000, '未认证');
-            return false;
-        }
+    	$needCheckActions =  ['publish', 'uploadImage', 'subscribe'];
+    	if(in_array($this->ruler->actionName, $needCheckActions)) {
+    		$api_token = addslashes($_REQUEST['api_token']);
+    		$this->model->user = $this->user = $api_token ? $this->model->db->getRow("select * from users where api_token='{$api_token}'") : false;
+    		
+    		if(!$this->user) {
+    			echo apiJson(1000, '未认证');
+    			return false;
+    		}
+    	}
     	
     	return true;
     }
@@ -78,10 +80,6 @@ class ArticlesController extends AppController
             return addslashes(trim($v));
         }, $_POST);
 
-        if(!$params['name']){
-            echo apiJson(-1, '名称不能为空！');return;
-        }
-
         if(!$params['description']){
             echo apiJson(-1, '描述不能为空！');return;
         }
@@ -92,8 +90,9 @@ class ArticlesController extends AppController
 
         $data = [
             'userid' => $params['userid'],
-            'name' => $params['name'],
             'description' => $params['description'],
+        	'telphone' => $params['telphone'],
+        	'location' => $params['location'],
             'images' => json_decode($_POST['images'])
         ];
 

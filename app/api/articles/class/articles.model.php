@@ -20,8 +20,9 @@ class ArticlesModel extends AppModel
         $time = date('Y-m-d H:i:s');
 
         $row = [
-            'name' => $data['name'],
             'description' => $data['description'],
+        	'telphone' => $data['telphome'],
+        	'location' => $data['location'],
             'publish_at' => $time,
             'create_at' => $time,
             'update_at' => $time,
@@ -114,7 +115,7 @@ class ArticlesModel extends AppModel
         if(!$page){
             $page = 1;
         }
-
+ 
         $offset = $rowSize  * ($page - 1);
         $limit = "{$offset},{$rowSize}";
 
@@ -175,15 +176,7 @@ class ArticlesModel extends AppModel
         $this->articlesWithComments($articles['data']);
 
         // 加载关注信息
-        if($this->user && $articles['data']){
-            $ids = array_column($articles['data'], 'id');
-            $in = implode(',', $ids);
-            $subscribes = $this->db->getCol("select article_id from subscribe where user_id={$this->user['id']} and article_id in ({$in})");
-            foreach($articles['data'] as & $article){
-                $article['isSubscribe'] = in_array($article['id'], $subscribes);
-            }
-            unset($article);
-        }
+        $this->articlesWithSubscribe($articles['data']);
 
         // 加载点赞
         $this->articleWithStars($articles['data']);
@@ -338,6 +331,21 @@ class ArticlesModel extends AppModel
 			foreach ($articles as & $article) {
 				$article['prises'] = isset($stars[$article['id']]) ? $stars[$article['id']] : [];
 			}
+    	}
+    }
+    
+    /**
+     * 加载关注信息
+     */
+    public function articlesWithSubscribe(& $articles) {
+    	if($this->user && $articles['data']){
+    		$ids = array_column($articles['data'], 'id');
+    		$in = implode(',', $ids);
+    		$subscribes = $this->db->getCol("select article_id from subscribe where user_id={$this->user['id']} and article_id in ({$in})");
+    		foreach($articles['data'] as & $article){
+    			$article['isSubscribe'] = in_array($article['id'], $subscribes);
+    		}
+    		unset($article);
     	}
     }
 
