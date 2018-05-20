@@ -21,7 +21,7 @@ class ArticlesModel extends AppModel
 
         $row = [
             'description' => $data['description'],
-        	'telphone' => $data['telphome'],
+        	'telphone' => $data['telphone'],
         	'location' => $data['location'],
             'publish_at' => $time,
             'create_at' => $time,
