@@ -112,17 +112,15 @@ class ArticlesController extends AppController
             return;
         }
         
-        // 已关注
-        if($this->model->getUserSubscribe($this->user['id'], $articleId)){
-            echo apiJson(0, '已关注！');
-            return;
-        }
-        
         $telphone = isset($_POST['telphone']) ? intval($_POST['telphone']) : '';
         $message = isset($_POST['message']) ? intval($_POST['message']) : '';
 
-        $this->model->subscribe($this->user['id'], $this->user['wx_nick_name'], $articleId, $telphone, $message);
-        echo apiJson(0);
+        $ret = $this->model->subscribe($this->user['id'], $this->user['wx_nick_name'], $articleId, $telphone, $message);
+        if($ret) {
+        	echo apiJson(0, '已关注！');
+        } else {
+        	echo apiJson(-2, '关注失败！');
+        }
     }
 
     /**

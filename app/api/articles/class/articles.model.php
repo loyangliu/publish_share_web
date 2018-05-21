@@ -392,14 +392,18 @@ class ArticlesModel extends AppModel
      */
     public function subscribe($userId, $userName, $articleId, $telphone, $message)
     {
-        $this->db->insert([
-            'user_id' => $userId,
-        	'user_nickname' => $userName,
-            'article_id' => $articleId,
-        	'telphone' => $telphone,
-        	'message' => $message,
-            'subscribe_time' => date('Y-m-d H:i:s')
-        ], 'subscribe');
+    	$table = "subscribe";
+    	$data = [
+    			'user_id' => $userId,
+    			'user_nickname' => $userName,
+    			'article_id' => $articleId,
+    			'telphone' => $telphone,
+    			'message' => $message,
+    			'subscribe_time' => date('Y-m-d H:i:s')
+    	];
+    	$where = " WHERE article_id={$articleId} AND user_id={$userId}";
+    	
+    	return $this->db->update($data, $table, $where);
     }
 
     /**
