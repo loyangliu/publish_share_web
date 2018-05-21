@@ -17,7 +17,9 @@ class CommentsModel extends AppModel {
 		$row = [
 				'article_id' => $data['article_id'],
 				'from' => $data['from'],
+				'from_userid' => $data['from_userid'],
 				'to' => $data['to'],
+				'to_userid' => $data['to_userid'],
 				'message' => $data['message'],
 				'commit_at' => $time
 		];
