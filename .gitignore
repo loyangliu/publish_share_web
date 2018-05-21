@@ -3,3 +3,4 @@
 /.settings
 .env
 composer.lock
+file.cache

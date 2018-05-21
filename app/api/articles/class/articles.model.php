@@ -390,11 +390,14 @@ class ArticlesModel extends AppModel
      * @param $userId
      * @param $articleId
      */
-    public function subscribe($userId, $articleId)
+    public function subscribe($userId, $userName, $articleId, $telphone, $message)
     {
         $this->db->insert([
             'user_id' => $userId,
+        	'user_nickname' => $userName,
             'article_id' => $articleId,
+        	'telphone' => $telphone,
+        	'message' => $message,
             'subscribe_time' => date('Y-m-d H:i:s')
         ], 'subscribe');
     }

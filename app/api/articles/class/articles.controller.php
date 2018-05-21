@@ -106,19 +106,22 @@ class ArticlesController extends AppController
      */
     public function subscribe()
     {
-        $articleId = intval($_POST['article_id']);
+    	$articleId = isset($_POST['article_id']) ? intval($_POST['article_id']) : null;
         if(!$articleId || !$article = $this->model->find($articleId)){
             echo apiJson(-1, '帖子被删除了！');
             return;
         }
-
+        
         // 已关注
         if($this->model->getUserSubscribe($this->user['id'], $articleId)){
             echo apiJson(0, '已关注！');
             return;
         }
+        
+        $telphone = isset($_POST['telphone']) ? intval($_POST['telphone']) : '';
+        $message = isset($_POST['message']) ? intval($_POST['message']) : '';
 
-        $this->model->subscribe($this->user['id'], $articleId);
+        $this->model->subscribe($this->user['id'], $this->user['wx_nick_name'], $articleId, $telphone, $message);
         echo apiJson(0);
     }
 
