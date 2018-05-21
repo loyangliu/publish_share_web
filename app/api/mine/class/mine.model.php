@@ -1,5 +1,8 @@
 <?php
 class MineModel extends AppModel {
+	
+	const STATIC_RES_URL = "https://www.loyangliu.com";
+	
 	/**
 	 * 重载init，初始化数据库
 	 */
@@ -14,6 +17,22 @@ class MineModel extends AppModel {
 		$time = new \Carbon\Carbon($time);
 		
 		return $time->diffForHumans();
+	}
+	
+	public function getImageDir() {
+		return 'storage/article_images';
+	}
+	
+	public function getThumbnailImageDir() {
+		return 'storage/article_thumbnail_images';
+	}
+	
+	public function getImageUrl($path) {
+		return self::STATIC_RES_URL.'/'. $this->getImageDir() . '/' . $path;
+	}
+	
+	public function getThumbnailImageUrl($path) {
+		return self::STATIC_RES_URL. '/' . $this->getThumbnailImageDir() . '/' . $path;
 	}
 	
 	public function getPublishNum() {
