@@ -175,8 +175,11 @@ class ArticlesModel extends AppModel
         // 加载留言
         $this->articlesWithComments($articles['data']);
 
-        // 加载关注信息
+        // 是否关注
         $this->articlesWithSubscribe($userid, $articles['data']);
+        
+        // 加载关注列表
+        $this->getArticlesWithSubsribers($articles['data']);
 
         // 加载点赞
         $this->articleWithStars($articles['data']);
@@ -337,7 +340,7 @@ class ArticlesModel extends AppModel
     }
     
     /**
-     * 加载关注信息
+     * 加载用户是否关注
      */
     public function articlesWithSubscribe($userid, & $articles) {
     	if($articles){
@@ -352,6 +355,32 @@ class ArticlesModel extends AppModel
     		
     		foreach($articles as & $article){
     			$article['isSubscribe'] = in_array($article['id'], $subscribes);
+    		}
+    	}
+    }
+    
+    /**
+     * 加载关注人列表
+     */
+    public function getArticlesWithSubsribers(& $articles) {
+    	if($articles) {
+    		$article_ids = implode(',', array_column($articles, 'id'));
+    		$subscribes = $this->db->getAll("select * from subscribe where article_id in ({$article_ids})");
+    		
+    		$subscribeInfo = [];
+    		foreach($subscribes as $subscribe) {
+    			$subscribeInfo[$subscribe['article_id']][] = array(
+    					'user_id' => $subscribe['user_id'],
+    					'user_nickname' => $subscribe['user_nickname'],
+    					'telphone' => $subscribe['telphone'],
+    					'message' => $subscribe['message'],
+    					'subscribe_time' => $subscribe['subscribe_time'],
+    					'subscribe_time_human' => $this->transformDate($subscribe['subscribe_time'])
+    			);
+    		}
+    		
+    		foreach($articles as & $article) {
+    			$article['subscribe'] = isset($subscribeInfo[$article['id']]) ? $subscribeInfo[$article['id']] : [];
     		}
     	}
     }
