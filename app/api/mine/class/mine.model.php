@@ -13,34 +13,34 @@ class MineModel extends AppModel {
 	}
 	
 	public function getCommentNum() {
-		return $this->db->getOne("select count(*) from articles where id={$this->user['id']}");
+		return $this->db->getOne("select count(*) from comments where from_userid={$this->user['id']}");
+	}
+	
+	public function getSubscribeNum() {
+		return $this->db->getOne("select count(*) from subscribe where user_id={$this->user['id']}");
 	}
 	
 	
-	
-	private function getMaxCurserId() {
-		return $this->db->getOne("select max(id) from articles");
-	}
-	
-	public function getMyPublishArticles($curserId, $page, $rowSize) {
-		if(!$curserId) {
-			$curserId = $this->getMaxCurserId();
-		}
+	public function getMyPublishArticles($userid, $page, $pageSize) {
+		$start = ($page - 1) * $pageSize;
 		
-		$userid = $this->user['id'];
+		$where = " where user_id={$userid}";
+		$order = " order by publish_at desc";
+		$limit = " limit {$start},{$pageSize}";
 		
-		$from = 'articles';
-		//$where = "WHERE user_id='{$this->user['id']}' AND "
-		return null;
+		$articles = $this->db->getAll("select * from articles {$where} {$order} {$limit}");
+		return $articles;
 	}
 	
 	/**
 	 * 获取“我的发布”
 	 */
-	public function getMyPublishArticlesWithAll($curserId, $page, $rowSize = 5)
-	{
-		$articles = $this->getMyPublishArticles($curserId, $page, $rowSize);
+	public function getMyPublishArticlesWithAll($page, $pageSize) {
+		if(!$this->user) {
+			return null;
+		}
 		
+		$articles = $this->getMyPublishArticles($this->user[id], $page, $pageSize);
 		
 		return $articles;
 	}

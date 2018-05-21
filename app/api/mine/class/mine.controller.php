@@ -4,7 +4,7 @@ class MineController extends AppController {
      * 业务侧根据需要重载自定义登录态验证
      */
     public function loginCheck() {
-    	$needCheckActions =  ['home'];
+    	$needCheckActions =  ['home', 'myPublish'];
     	if(in_array($this->ruler->actionName, $needCheckActions)) {
     		$api_token = addslashes($_REQUEST['api_token']);
     		$this->model->user = $this->user = $api_token ? $this->model->db->getRow("select * from users where api_token='{$api_token}'") : false;
@@ -33,7 +33,7 @@ class MineController extends AppController {
     				'commentNum' => $commentNum,
     				'subscribeNum' => $subscribeNum,
     			];
-    			echo apiJson(0, null, $data);
+    			echo apiJson(0, null, ['my_num' => $data]);
     		} else {
     			echo apiJson(-1, "内部错误！");
     		}
@@ -46,9 +46,14 @@ class MineController extends AppController {
      * 获取“我的发布”
      */
     public function myPublish() {
-    	$curserId = intval($_GET['offsetId']);// 帖子开始id，防止因数据库新增数据，引起页码偏移，导致重复加载数据
-    	$page = intval($_GET['page']);// 页
-    	$articles = $this->model->getMyPublishArticlesWithAll($curserId, $page);
-    	echo apiJson(0, null, ['articles' => $articles]);
+    	$page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+    	$pageSize = isset($_GET['page_size']) ? intval($_GET['page_size']) : 10;
+    	
+    	$publishs = $this->model->getMyPublishArticlesWithAll($page, $pageSize);
+    	if($publishs) {
+    		echo apiJson(0, null, ['my_publish' => $publishs]);
+    	} else {
+    		echo apiJson(-1, "获取异常");
+    	}
     }
 }
