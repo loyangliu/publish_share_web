@@ -159,7 +159,7 @@ class ArticlesModel extends AppModel
      * @param int $rowSize
      * @return array
      */
-    public function getHomeArticlesWithAll($offsetId, $page, $rowSize = 5)
+    public function getHomeArticlesWithAll($userid, $offsetId, $page, $rowSize = 5)
     {
         $articles = $this->getHomeArticles($offsetId, $page, $rowSize);
 
@@ -176,7 +176,7 @@ class ArticlesModel extends AppModel
         $this->articlesWithComments($articles['data']);
 
         // 加载关注信息
-        $this->articlesWithSubscribe($articles['data']);
+        $this->articlesWithSubscribe($userid, $articles['data']);
 
         // 加载点赞
         $this->articleWithStars($articles['data']);
@@ -337,11 +337,17 @@ class ArticlesModel extends AppModel
     /**
      * 加载关注信息
      */
-    public function articlesWithSubscribe(& $articles) {
+    public function articlesWithSubscribe($userid, & $articles) {
     	if($this->user && $articles['data']){
     		$ids = array_column($articles['data'], 'id');
     		$in = implode(',', $ids);
-    		$subscribes = $this->db->getCol("select article_id from subscribe where user_id={$this->user['id']} and article_id in ({$in})");
+    		
+    	    if($userid != 0) {
+    	    	$subscribes = $this->db->getCol("select article_id from subscribe where user_id={$userid} and article_id in ({$in})");
+    		} else {
+    			$subscribes = [];
+    		}
+    		
     		foreach($articles['data'] as & $article){
     			$article['isSubscribe'] = in_array($article['id'], $subscribes);
     		}

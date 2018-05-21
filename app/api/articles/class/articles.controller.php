@@ -25,9 +25,10 @@ class ArticlesController extends AppController
      */
     public function home()
     {
+    	$userId = intval($_GET['userid']);
     	$startId = intval($_GET['offsetId']);// 帖子开始id，防止因数据库新增数据，引起页码偏移，导致重复加载数据
     	$page = intval($_GET['page']);// 页
-    	$articles = $this->model->getHomeArticlesWithAll($startId, $page);
+    	$articles = $this->model->getHomeArticlesWithAll($userId, $startId, $page);
     	echo apiJson(0, null, ['articles' => $articles]);
     }
 
