@@ -338,7 +338,7 @@ class ArticlesModel extends AppModel
      * 加载关注信息
      */
     public function articlesWithSubscribe($userid, & $articles) {
-    	if($this->user && $articles['data']){
+    	if($articles){
     		$ids = array_column($articles['data'], 'id');
     		$in = implode(',', $ids);
     		
@@ -351,7 +351,6 @@ class ArticlesModel extends AppModel
     		foreach($articles as & $article){
     			$article['isSubscribe'] = in_array($article['id'], $subscribes);
     		}
-    		unset($article);
     	}
     }
 
