@@ -11,6 +11,12 @@ class ArticlesModel extends AppModel
 		$this->db = DbFactory::instance()->createDBO('publish_share');
 	}
 	
+	private function transformDate($time) {
+		$time = new \Carbon\Carbon($time);
+		
+		return $time->diffForHumans();
+	}
+	
     /**
      * 发布帖子
      * @param $data
