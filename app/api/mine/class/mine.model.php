@@ -56,7 +56,7 @@ class MineModel extends AppModel {
 		$limit = " limit {$start},{$pageSize}";
 		
 		$articles = $this->db->getAll("select * from articles {$where} {$order} {$limit}");
-		foreach($articles as $article) {
+		foreach($articles as & $article) {
 			$article['publish_at_human'] = $this->transformDate($article['publish_at']);
 		}
 		
@@ -183,7 +183,7 @@ class MineModel extends AppModel {
 			return null;
 		}
 		
-		$articles = $this->getMyPublishArticles($this->user[id], $page, $pageSize);
+		$articles = $this->getMyPublishArticles($this->user['id'], $page, $pageSize);
 		
 		// 对 帖子 关联 图片
 		$this->getMyPublishArticlesWithImage($articles);
@@ -198,5 +198,38 @@ class MineModel extends AppModel {
 		$this->getMyPublishArticlesWithStars($articles);
 		
 		return $articles;
+	}
+	
+	/**
+	 * 获取 关注的文章列表
+	 */
+	public function getMySubscribeWithAll() {
+		if(!$this->user) {
+			return null;
+		}
+		
+		$subscribes = $this->db->getAll("select * from subscribe where user_id={$this->user['id']}");
+		if($subscribes) {
+			$articleIds = array_column($subscribes, 'article_id');
+			$ids = implode(',', $articleIds);
+			
+			$articles = $this->db->getAll("select * from articles where id in ({$ids}) order by publish_at desc limit 0,10");
+			
+			// 对 帖子 关联 图片
+			$this->getMyPublishArticlesWithImage($articles);
+			
+			// 对 帖子 关联 关注者
+			$this->getMyPublishArticlesWithSubsribers($articles);
+			
+			// 对 帖子 关联 评论
+			$this->getMyPublishArticlesWithComments($articles);
+			
+			// 对 帖子 关联 点赞
+			$this->getMyPublishArticlesWithStars($articles);
+			
+			return $articles;
+		} else {
+			return null;
+		}
 	}
 }

@@ -4,7 +4,7 @@ class MineController extends AppController {
      * 业务侧根据需要重载自定义登录态验证
      */
     public function loginCheck() {
-    	$needCheckActions =  ['home', 'myPublish'];
+    	$needCheckActions =  ['home', 'myPublish', 'mySubscribe'];
     	if(in_array($this->ruler->actionName, $needCheckActions)) {
     		$api_token = addslashes($_REQUEST['api_token']);
     		$this->model->user = $this->user = $api_token ? $this->model->db->getRow("select * from users where api_token='{$api_token}'") : false;
@@ -56,6 +56,18 @@ class MineController extends AppController {
     				'page' => $page,
     				'page_size' => $page_size
     		]);
+    	} else {
+    		echo apiJson(-1, "获取异常");
+    	}
+    }
+    
+    /**
+     * 获取“我的关注”
+     */
+    public function mySubscribe() {
+    	$subscribes = $this->model->getMySubscribeWithAll();
+    	if($subscribes) {
+    		echo apiJson(0, null, ['my_subscribe' => $subscribes]);
     	} else {
     		echo apiJson(-1, "获取异常");
     	}
