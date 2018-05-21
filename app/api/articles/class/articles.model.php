@@ -401,7 +401,7 @@ class ArticlesModel extends AppModel
     			'message' => $message,
     			'subscribe_time' => date('Y-m-d H:i:s')
     	];
-    	$where = " WHERE article_id={$articleId} AND user_id={$userId}";
+    	$where = "article_id={$articleId} AND user_id={$userId}";
     	
     	return $this->db->update($data, $table, $where);
     }
