@@ -348,7 +348,7 @@ class ArticlesModel extends AppModel
     			$subscribes = [];
     		}
     		
-    		foreach($articles['data'] as & $article){
+    		foreach($articles as & $article){
     			$article['isSubscribe'] = in_array($article['id'], $subscribes);
     		}
     		unset($article);
