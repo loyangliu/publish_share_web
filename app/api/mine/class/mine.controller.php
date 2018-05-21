@@ -54,7 +54,7 @@ class MineController extends AppController {
     		echo apiJson(0, null, [
     				'my_publish' => $publishs, 
     				'page' => $page,
-    				'page_size' => $page_size
+    				'page_size' => $pageSize
     		]);
     	} else {
     		echo apiJson(-1, "获取异常");

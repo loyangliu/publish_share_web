@@ -176,6 +176,15 @@ class MineModel extends AppModel {
 	}
 	
 	/**
+	 * 对 帖子 关联 user
+	 */
+	public function getMyPublishArticlesWithUser(& $articles) {
+		foreach($articles as & $article){
+			$article['user'] = isset($this->user) ? $this->user: null;
+		}
+	}
+	
+	/**
 	 * 获取“我的发布”
 	 */
 	public function getMyPublishArticlesWithAll($page, $pageSize) {
@@ -196,6 +205,9 @@ class MineModel extends AppModel {
 		
 		// 对 帖子 关联 点赞
 		$this->getMyPublishArticlesWithStars($articles);
+		
+		// 对 帖子 关联 user
+		$this->getMyPublishArticlesWithUser($articles);
 		
 		return $articles;
 	}
@@ -226,6 +238,9 @@ class MineModel extends AppModel {
 			
 			// 对 帖子 关联 点赞
 			$this->getMyPublishArticlesWithStars($articles);
+			
+			// 对 帖子 关联 user
+			$this->getMyPublishArticlesWithUser($articles);
 			
 			return $articles;
 		} else {
