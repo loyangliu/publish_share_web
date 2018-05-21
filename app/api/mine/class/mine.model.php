@@ -99,7 +99,7 @@ class MineModel extends AppModel {
 	public function getMyPublishArticlesWithSubsribers(& $articles) {
 		if($articles) {
 			$article_ids = implode(',', array_column($articles, 'id'));
-			$subscribes = $this->db->getAll("select * from subscribe where article_id in {$article_ids}");
+			$subscribes = $this->db->getAll("select * from subscribe where article_id in ({$article_ids})");
 			
 			$subscribeInfo = [];
 			foreach($subscribes as $subscribe) {
