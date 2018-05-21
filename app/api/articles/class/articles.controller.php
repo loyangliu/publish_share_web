@@ -112,8 +112,8 @@ class ArticlesController extends AppController
             return;
         }
         
-        $telphone = isset($_POST['telphone']) ? intval($_POST['telphone']) : '';
-        $message = isset($_POST['message']) ? intval($_POST['message']) : '';
+        $telphone = isset($_POST['telphone']) ? $_POST['telphone'] : '';
+        $message = isset($_POST['message']) ? $_POST['message'] : '';
 
         $ret = $this->model->subscribe($this->user['id'], $this->user['wx_nick_name'], $articleId, $telphone, $message);
         if($ret) {
