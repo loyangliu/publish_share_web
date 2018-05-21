@@ -40,8 +40,16 @@ class CommentsController extends AppController {
 			echo apiJson(-1, 'from 不能为空！');return;
 		}
 		
+		if(!isset($params['from_userid'])){
+			echo apiJson(-1, 'from_userid 不能为空！');return;
+		}
+		
 		if(!isset($params['to'])){
 			echo apiJson(-1, 'to 不能为空！');return;
+		}
+		
+		if(!isset($params['to_userid'])){
+			echo apiJson(-1, 'to_userid 不能为空！');return;
 		}
 		
 		if(!isset($params['message'])){
@@ -51,7 +59,9 @@ class CommentsController extends AppController {
 		$data = [
 				'article_id' => $params['article_id'],
 				'from' => $params['from'],
+				'from_userid' => $params['from_userid'],
 				'to' => $params['to'],
+				'to_userid' => $params['to_userid'],
 				'message' => $params['message']
 		];
 		

@@ -7,6 +7,17 @@ class MineModel extends AppModel {
 		$this->db = DbFactory::instance()->createDBO('publish_share');
 	}
 	
+	
+	public function getPublishNum() {
+		return $this->db->getOne("select count(*) from articles where id={$this->user['id']}");
+	}
+	
+	public function getCommentNum() {
+		return $this->db->getOne("select count(*) from articles where id={$this->user['id']}");
+	}
+	
+	
+	
 	private function getMaxCurserId() {
 		return $this->db->getOne("select max(id) from articles");
 	}

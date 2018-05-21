@@ -293,7 +293,9 @@ class ArticlesModel extends AppModel
     			$comments[$row['article_id']][] = array(
     					'article_id'=>$row['article_id'],
     					'from'=>$row['from'],
+    					'from_userid'=>$row['from_userid'],
     					'to'=>$row['to'],
+    					'to_userid'=>$row['to_userid'],
     					'message'=>$row['message'],
     					'commit_at'=>$row['commit_at']
     			);
