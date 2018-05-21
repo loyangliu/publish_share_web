@@ -185,6 +185,26 @@ class MineModel extends AppModel {
 	}
 	
 	/**
+	 * 我是否关注了 该 帖子
+	 */
+	public function articlesWithMineSubscribe($userid, & $articles) {
+		if($articles){
+			$ids = array_column($articles, 'id');
+			$in = implode(',', $ids);
+			
+			if($userid != 0) {
+				$subscribes = $this->db->getCol("select article_id from subscribe where user_id={$userid} and article_id in ({$in})");
+			} else {
+				$subscribes = [];
+			}
+			
+			foreach($articles as & $article){
+				$article['isSubscribe'] = in_array($article['id'], $subscribes);
+			}
+		}
+	}
+	
+	/**
 	 * 获取“我的发布”
 	 */
 	public function getMyPublishArticlesWithAll($page, $pageSize) {
@@ -208,6 +228,9 @@ class MineModel extends AppModel {
 		
 		// 对 帖子 关联 user
 		$this->getMyPublishArticlesWithUser($articles);
+		
+		// 我是否关注了 该 帖子
+		$this->articlesWithMineSubscribe($this->user['id'], $articles);
 		
 		return $articles;
 	}
@@ -241,6 +264,9 @@ class MineModel extends AppModel {
 			
 			// 对 帖子 关联 user
 			$this->getMyPublishArticlesWithUser($articles);
+			
+			// 我是否关注了 该 帖子
+			$this->articlesWithMineSubscribe($this->user['id'], $articles);
 			
 			return $articles;
 		} else {
