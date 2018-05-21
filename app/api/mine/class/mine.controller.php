@@ -51,7 +51,11 @@ class MineController extends AppController {
     	
     	$publishs = $this->model->getMyPublishArticlesWithAll($page, $pageSize);
     	if($publishs) {
-    		echo apiJson(0, null, ['my_publish' => $publishs]);
+    		echo apiJson(0, null, [
+    				'my_publish' => $publishs, 
+    				'page' => $page,
+    				'page_size' => $page_size
+    		]);
     	} else {
     		echo apiJson(-1, "获取异常");
     	}
