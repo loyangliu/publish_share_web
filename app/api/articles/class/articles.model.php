@@ -339,7 +339,7 @@ class ArticlesModel extends AppModel
      */
     public function articlesWithSubscribe($userid, & $articles) {
     	if($articles){
-    		$ids = array_column($articles['data'], 'id');
+    		$ids = array_column($articles, 'id');
     		$in = implode(',', $ids);
     		
     	    if($userid != 0) {
