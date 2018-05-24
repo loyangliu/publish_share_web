@@ -92,8 +92,11 @@ class ArticlesController extends AppController
         $data = [
             'userid' => $params['userid'],
             'description' => $params['description'],
-        	'telphone' => $params['telphone'],
-        	'location' => $params['location'],
+        	'telphone' => isset($params['telphone'])?$params['telphone']:null,
+        	'location' => isset($params['location'])?$params['location']:null,
+        	'location_name' => isset($params['location_name'])?$params['location_name']:null,
+        	'location_latitude' => isset($params['location_latitude'])?$params['location_latitude']:null,
+        	'location_longitude' => isset($params['location_longitude'])?$params['location_longitude']:null,
             'images' => json_decode($_POST['images'])
         ];
 
