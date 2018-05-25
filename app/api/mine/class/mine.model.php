@@ -252,6 +252,7 @@ class MineModel extends AppModel {
 			foreach($articles as $article) {
 				$time = $article['publish_at'];
 				$diffForHumans = $this->transformDate($time);
+				$article['publish_at'] = array();
 				$article['publish_at']['time'] = $time;
 				$article['publish_at']['diffForHumans'] = $diffForHumans;
 			}
