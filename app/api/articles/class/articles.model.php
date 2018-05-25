@@ -149,7 +149,7 @@ class ArticlesModel extends AppModel
      */
     public function getArticles($where, $limit, $orderBy)
     {
-        return $this->db->getAll("select id,description,telphone,location,publish_at,user_id from articles{$where} {$orderBy} desc", $limit);
+        return $this->db->getAll("select id,description,telphone,location,location_name,location_latitude,location_longitude,publish_at,user_id from articles{$where} {$orderBy} desc", $limit);
     }
 
     /**
