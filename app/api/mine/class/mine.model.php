@@ -249,7 +249,7 @@ class MineModel extends AppModel {
 			$ids = implode(',', $articleIds);
 			
 			$articles = $this->db->getAll("select * from articles where id in ({$ids}) order by publish_at desc limit 0,10");
-			foreach($articles as $article) {
+			foreach($articles as & $article) {
 				$time = $article['publish_at'];
 				$diffForHumans = $this->transformDate($time);
 				$article['publish_at'] = array();
