@@ -185,6 +185,26 @@ class MineModel extends AppModel {
 	}
 	
 	/**
+	 * 对 Subscribe帖子 关联 user
+	 */
+	public function getMySubscribeArticlesWithUser(& $articles) {
+		$user_ids = array_unique(array_column($articles, 'user_id'));
+		$in = implode(',', $user_ids);
+		$users = $this->db->getAll("select * from users where id in ({$in})");
+		$usermap = [];
+		
+		if($users) {
+			foreach($users as $user) {
+				$usermap[$user['id']] = $user;
+			}
+		}
+		
+		foreach($articles as & $article){
+			$article['user'] = isset($usermap[$article['user_id']]) ? $usermap[$article['user_id']] : null;
+		}
+	}
+	
+	/**
 	 * 我是否关注了 该 帖子
 	 */
 	public function articlesWithMineSubscribe($userid, & $articles) {
@@ -270,7 +290,7 @@ class MineModel extends AppModel {
 			$this->getMyPublishArticlesWithStars($articles);
 			
 			// 对 帖子 关联 user
-			$this->getMyPublishArticlesWithUser($articles);
+			$this->getMySubscribeArticlesWithUser($articles);
 			
 			// 我是否关注了 该 帖子
 			$this->articlesWithMineSubscribe($this->user['id'], $articles);
