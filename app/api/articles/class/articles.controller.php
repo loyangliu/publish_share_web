@@ -28,8 +28,8 @@ class ArticlesController extends AppController
     	$userId = intval($_GET['userid']);
     	$startId = intval($_GET['offsetId']);// 帖子开始id，防止因数据库新增数据，引起页码偏移，导致重复加载数据
     	$page = intval($_GET['page']);// 页
-    	$latitude = intval($_GET['latitude']); //我的经度
-    	$longitude = intval($_GET['longitude']); //我的纬度
+    	$latitude = floatval($_GET['latitude']); //我的经度
+    	$longitude = floatval($_GET['longitude']); //我的纬度
     	$articles = $this->model->getHomeArticlesWithAll($userId, $latitude, $longitude, $startId, $page);
     	echo apiJson(0, null, ['articles' => $articles]);
     }
