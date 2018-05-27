@@ -149,6 +149,7 @@ class ArticlesModel extends AppModel
         			$distance = $this->calDistance($latitude, $longitude, floatval($article['location_latitude']), floatval($article['location_longitude']));
         			$article['distance'] = $distance;
         		}
+        		unset($article);
         	}
         }
 
