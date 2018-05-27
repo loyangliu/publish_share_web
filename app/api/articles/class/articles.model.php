@@ -1,5 +1,8 @@
 <?php
 
+use Location\Coordinate;
+use Location\Distance\Vincenty;
+
 class ArticlesModel extends AppModel
 {
 	const STATIC_RES_URL = "https://www.loyangliu.com";
@@ -15,6 +18,15 @@ class ArticlesModel extends AppModel
 		$time = new \Carbon\Carbon($time);
 		
 		return $time->diffForHumans();
+	}
+	
+	private function calDistance($latitude1, $longitude1, $latitude2, $longitude2) {
+		$coordinate1 = new Coordinate($latitude1, $longitude1); // Mauna Kea Summit
+		$coordinate2 = new Coordinate($latitude2, $longitude2); // Haleakala Summit
+		
+		$calculator = new Vincenty();
+		
+		echo $calculator->getDistance($coordinate1, $coordinate2); // returns xxx (meters; ≈128 kilometers)
 	}
 	
     /**
@@ -110,7 +122,7 @@ class ArticlesModel extends AppModel
      * @param int $rowSize
      * @return array
      */
-    public function getHomeArticles($offsetId, $page, $rowSize = 5)
+    public function getHomeArticles($latitude, $longitude, $offsetId, $page, $rowSize = 5)
     {
         if(!$offsetId){
             $offsetId = $this->getMaxId();
@@ -131,6 +143,14 @@ class ArticlesModel extends AppModel
         $where = $map ? ' where ' . implode(' and ', $map) : '';
 
         $data = $this->getArticles($where, $limit, 'order by publish_at');
+        if($data) {
+        	foreach ($data as & $article) {
+        		if($article['location'] != '' && $article['location'] != null) {
+        			$distance = $this->calDistance($latitude, $longitude, $article['location_latitude'], $article['location_longitude']);
+        			$article['distance'] = $distance;
+        		}
+        	}
+        }
 
         return [
             'data' => $data,
@@ -168,9 +188,9 @@ class ArticlesModel extends AppModel
      * @param int $rowSize
      * @return array
      */
-    public function getHomeArticlesWithAll($userid, $offsetId, $page, $rowSize = 5)
+    public function getHomeArticlesWithAll($userid, $latitude, $longitude, $offsetId, $page, $rowSize = 5)
     {
-        $articles = $this->getHomeArticles($offsetId, $page, $rowSize);
+    	$articles = $this->getHomeArticles($latitude, $longitude, $offsetId, $page, $rowSize);
 
         // 加载发布者信息
         $this->articlesWithUser($articles['data']);
