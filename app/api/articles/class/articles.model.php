@@ -143,15 +143,7 @@ class ArticlesModel extends AppModel
         $where = $map ? ' where ' . implode(' and ', $map) : '';
 
         $data = $this->getArticles($where, $limit, 'order by publish_at');
-        if($data) {
-        	foreach ($data as & $article) {
-        		if($article['location'] != '' && $article['location'] != null) {
-        			$distance = $this->calDistance($latitude, $longitude, floatval($article['location_latitude']), floatval($article['location_longitude']));
-        			$article['distance'] = $distance;
-        		}
-        		unset($article);
-        	}
-        }
+        
 
         return [
             'data' => $data,
