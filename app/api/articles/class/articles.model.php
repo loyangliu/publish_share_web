@@ -146,7 +146,7 @@ class ArticlesModel extends AppModel
         if($data) {
         	foreach ($data as & $article) {
         		if($article['location'] != '' && $article['location'] != null) {
-        			$distance = $this->calDistance($latitude, $longitude, $article['location_latitude'], $article['location_longitude']);
+        			$distance = $this->calDistance($latitude, $longitude, floatval($article['location_latitude']), floatval($article['location_longitude']));
         			$article['distance'] = $distance;
         		}
         	}
