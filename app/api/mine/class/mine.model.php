@@ -1,4 +1,8 @@
 <?php
+
+use Location\Coordinate;
+use Location\Distance\Vincenty;
+
 class MineModel extends AppModel {
 	
 	const STATIC_RES_URL = "https://www.loyangliu.com";
@@ -17,6 +21,15 @@ class MineModel extends AppModel {
 		$time = new \Carbon\Carbon($time);
 		
 		return $time->diffForHumans();
+	}
+	
+	private function calDistance($latitude1, $longitude1, $latitude2, $longitude2) {
+		$coordinate1 = new Coordinate($latitude1, $longitude1); // Mauna Kea Summit
+		$coordinate2 = new Coordinate($latitude2, $longitude2); // Haleakala Summit
+		
+		$calculator = new Vincenty();
+		
+		return $calculator->getDistance($coordinate1, $coordinate2); // returns xxx (meters; ≈128 kilometers)
 	}
 	
 	public function getImageDir() {
@@ -258,7 +271,7 @@ class MineModel extends AppModel {
 	/**
 	 * 获取 关注的文章列表
 	 */
-	public function getMySubscribeWithAll() {
+	public function getMySubscribeWithAll($latitude, $longitude) {
 		if(!$this->user) {
 			return null;
 		}
@@ -275,6 +288,7 @@ class MineModel extends AppModel {
 				$article['publish_at'] = array();
 				$article['publish_at']['time'] = $time;
 				$article['publish_at']['diffForHumans'] = $diffForHumans;
+				$article['distance'] = $this->calDistance($latitude, $longitude, floatval($article['location_latitude']), floatval($article['location_longitude']));
 			}
 			
 			// 对 帖子 关联 图片

@@ -65,7 +65,16 @@ class MineController extends AppController {
      * 获取“我的关注”
      */
     public function mySubscribe() {
-    	$subscribes = $this->model->getMySubscribeWithAll();
+    	
+    	if(!isset($_GET['latitude']) || !isset($_GET['longitude'])) {
+    		echo apiJson(-1, "参数异常");
+    		return;
+    	}
+    	
+    	$latitude = floatval($_GET['latitude']); //我的经度
+    	$longitude = floatval($_GET['longitude']); //我的纬度
+    	
+    	$subscribes = $this->model->getMySubscribeWithAll($latitude, $longitude);
     	if($subscribes) {
     		echo apiJson(0, null, ['my_subscribe' => $subscribes]);
     	} else {
