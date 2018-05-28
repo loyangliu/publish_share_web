@@ -169,7 +169,7 @@ class ArticlesModel extends AppModel
     	$pastMonthDate = $now->subMonths(1)->toDateTimeString();
     	
     	$where = " where publish_at > {$pastMonthDate}";
-    	$articleInMonth = $this->db->getAll("select * from articles where publish_at > {$pastMonthDate} order by publish_at desc");
+    	$articleInMonth = $this->db->getAll("select * from articles where publish_at > '{$pastMonthDate}' order by publish_at desc");
     	
     	$counter = 0;
     	$data = [];
