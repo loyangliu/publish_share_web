@@ -26,7 +26,7 @@ class ArticlesModel extends AppModel
 		
 		$calculator = new Vincenty();
 		
-		echo $calculator->getDistance($coordinate1, $coordinate2); // returns xxx (meters; ≈128 kilometers)
+		return $calculator->getDistance($coordinate1, $coordinate2); // returns xxx (meters; ≈128 kilometers)
 	}
 	
     /**
@@ -147,9 +147,8 @@ class ArticlesModel extends AppModel
         	foreach ($data as & $item) {
         		if($item['location'] != '' && $item['location'] != null) {
         			$distance = $this->calDistance($latitude, $longitude, floatval($item['location_latitude']), floatval($item['location_longitude']));
-        			//$item['distance'] = $distance;
+        			$item['distance'] = $distance;
         		}
-        		unset($item);
         	}
         }
 
