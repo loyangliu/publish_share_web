@@ -33,6 +33,18 @@ class ArticlesController extends AppController
     	$articles = $this->model->getHomeArticlesWithAll($userId, $latitude, $longitude, $startId, $page);
     	echo apiJson(0, null, ['articles' => $articles]);
     }
+    
+    /**
+     * 附件的帖子
+     */
+    public function nearby() {
+    	$userId = intval($_GET['userid']);
+    	$latitude = floatval($_GET['latitude']); //我的经度
+    	$longitude = floatval($_GET['longitude']); //我的纬度
+    	
+    	$articles = $this->model->getNearbyArticlesWithAll($userId, $latitude, $longitude, $startId, $page);
+    	echo apiJson(0, null, ['articles' => $articles]);
+    }
 
 
     /**

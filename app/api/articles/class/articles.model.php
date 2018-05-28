@@ -159,6 +159,46 @@ class ArticlesModel extends AppModel
             'offsetId' => $offsetId
         ];
     }
+    
+    /**
+     * 获取附件的文章列表
+     * 最多 30 条 & 一个月以内的发帖 & 距离不超过200公里
+     */
+    public function getNearbyArticles($latitude, $longitude) {
+    	$now = \Carbon\Carbon::now();
+    	$pastMonthDate = $now->subMonths(1)->toDateTimeString();
+    	
+    	$where = " where publish_at > {$pastMonthDate}";
+    	$articleInMonth = $this->db->getAll("select * from articles where publish_at > {$pastMonthDate} order by publish_at desc");
+    	
+    	$counter = 0;
+    	$data = [];
+    	if($articleInMonth) {
+    		for($index=0; $index < count($articleInMonth); $index++) {
+    			if($counter < 30) {
+    				$distance = $this->calDistance($latitude, $longitude, floatval($articleInMonth[$index]['location_latitude']), floatval($articleInMonth[$index]['location_longitude']));
+    				if($distance <= 200000) {
+    					$articleInMonth[$index]['distance'] = $distance;
+    					$data[] = $articleInMonth[$index];
+    				}
+    			} else {
+    				break;
+    			}
+    		}
+    	}
+    	
+    	usort($data, function($item1, $item2){
+    		if($item1['distance'] == $item2['distance']) {
+    			return 0;
+    		}
+    		
+    		return ($item1['distance'] < $item2['distance']) ? 1 : -1; 
+    	});
+    	
+    	return [
+    		'data' => $data
+    	];
+    }
 
     /**
      * 获取文章列表
@@ -188,8 +228,7 @@ class ArticlesModel extends AppModel
      * @param int $rowSize
      * @return array
      */
-    public function getHomeArticlesWithAll($userid, $latitude, $longitude, $offsetId, $page, $rowSize = 5)
-    {
+    public function getHomeArticlesWithAll($userid, $latitude, $longitude, $offsetId, $page, $rowSize = 5) {
     	$articles = $this->getHomeArticles($latitude, $longitude, $offsetId, $page, $rowSize);
 
         // 加载发布者信息
@@ -214,6 +253,37 @@ class ArticlesModel extends AppModel
         $this->articleWithStars($articles['data']);
 
         return $articles;
+    }
+    
+    /**
+     * 获取附件的文章列表
+     * 最多 30 条 & 一个月以内的发帖 & 距离不超过200公里
+     */
+    public function getNearbyArticlesWithAll($userid, $latitude, $longitude) {
+    	$articles = $this->getNearbyArticles($latitude, $longitude);
+    	
+    	// 加载发布者信息
+    	$this->articlesWithUser($articles['data']);
+    	
+    	// 格式化发布时间
+    	$this->articlesTransformPublishAt($articles['data']);
+    	
+    	// 加载图片
+    	$this->articlesWithImage($articles['data']);
+    	
+    	// 加载留言
+    	$this->articlesWithComments($articles['data']);
+    	
+    	// 是否关注
+    	$this->articlesWithSubscribe($userid, $articles['data']);
+    	
+    	// 加载关注列表
+    	$this->getArticlesWithSubsribers($articles['data']);
+    	
+    	// 加载点赞
+    	$this->articleWithStars($articles['data']);
+    	
+    	return $articles;
     }
 
     /**
