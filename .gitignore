@@ -1,1 +1,6 @@
-.*
+/vendor/
+/.idea
+/.settings
+.env
+composer.lock
+file.cache

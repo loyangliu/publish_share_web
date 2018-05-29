@@ -12,13 +12,9 @@ require_once WEBROOT_PATH . '/libs/framework/dispatcher.php';
  */
 class AppController extends Controller {
 
-	public function __construct() {
-		parent::__construct();
-	}
-	
 	public function initialize(&$ruler) {
 		parent::initialize($ruler);
-		
+
 		$this->render();
 	}
 	
@@ -27,7 +23,7 @@ class AppController extends Controller {
 		$this->view->assign("test", "testval");
 	}
 	
-	// 登录态校验
+	// 框架登录态校验
 	public function loginCheck() {
 		$session = Session::getInstance();
 		

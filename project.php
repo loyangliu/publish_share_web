@@ -1,4 +1,7 @@
-<?php 
+<?php
+
+date_default_timezone_set('PRC');
+
 if(!defined('DS'))
 {
 	define('DS', DIRECTORY_SEPARATOR);
@@ -101,3 +104,7 @@ if(!defined('SDL_CHECK'))
 require_once 'libs/framework/loader.php';
 require_once'libs/framework/dispatcher.php';
 require_once'libs/base/functions.php';
+
+\Carbon\Carbon::setLocale('zh'); 
+
+error_reporting(E_ALL & ~E_NOTICE);
