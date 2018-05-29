@@ -4,6 +4,12 @@
 class CACHE_CONFIG
 {
 	public static $caches = array(
+			'file' => array(
+					'type' => 'file',
+					'classname' => 'FileCache',
+					'filename' => 'file.cache'
+			),
+			
 			'db' => array(
 					'type' => 'db',
 					'classname' => 'DbCache',
