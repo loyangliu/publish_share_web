@@ -27,7 +27,7 @@ class MineController extends AppController {
     		$commentNum = $this->model->getCommentNum();
     		$subscribeNum = $this->model->getSubscribeNum();
     		
-    		if($publisNum && $commentNum && $subscribeNum) {
+    		if($publisNum != null && $commentNum != null && $subscribeNum != null) {
     			$data = [
     				'publisNum' => $publisNum,
     				'commentNum' => $commentNum,
