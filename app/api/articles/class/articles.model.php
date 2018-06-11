@@ -325,7 +325,7 @@ class ArticlesModel extends AppModel
     	$this->articlesWithComments($articles['data']);
     	
     	// 是否关注
-    	$this->articlesWithSubscribe($userid, $articles['data']);
+    	$this->articlesWithSubscribe($userId, $articles['data']);
     	
     	// 加载关注列表
     	$this->getArticlesWithSubsribers($articles['data']);
