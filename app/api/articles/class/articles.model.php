@@ -199,6 +199,26 @@ class ArticlesModel extends AppModel
     		'data' => $data
     	];
     }
+    
+    /**
+     * 
+     */
+    public function getArticleById($articleId, $latitude, $longitude) {
+    	$data = $this->db->getAll("select * from articles where id={$articleId}");
+    	
+    	if($data) {
+    		foreach ($data as & $item) {
+    			if($item['location'] != '' && $item['location'] != null) {
+    				$distance = $this->calDistance($latitude, $longitude, floatval($item['location_latitude']), floatval($item['location_longitude']));
+    				$item['distance'] = $distance;
+    			}
+    		}
+    	}
+    	
+    	return [
+    			'data' => $data
+    	];
+    }
 
     /**
      * 获取文章列表
@@ -256,11 +276,41 @@ class ArticlesModel extends AppModel
     }
     
     /**
-     * 获取附件的文章列表
+     * 获取附近的文章列表
      * 最多 30 条 & 一个月以内的发帖 & 距离不超过200公里
      */
     public function getNearbyArticlesWithAll($userid, $latitude, $longitude) {
     	$articles = $this->getNearbyArticles($latitude, $longitude);
+    	
+    	// 加载发布者信息
+    	$this->articlesWithUser($articles['data']);
+    	
+    	// 格式化发布时间
+    	$this->articlesTransformPublishAt($articles['data']);
+    	
+    	// 加载图片
+    	$this->articlesWithImage($articles['data']);
+    	
+    	// 加载留言
+    	$this->articlesWithComments($articles['data']);
+    	
+    	// 是否关注
+    	$this->articlesWithSubscribe($userid, $articles['data']);
+    	
+    	// 加载关注列表
+    	$this->getArticlesWithSubsribers($articles['data']);
+    	
+    	// 加载点赞
+    	$this->articleWithStars($articles['data']);
+    	
+    	return $articles;
+    }
+    
+    /**
+     * 获取指定的文章列表
+     */
+    public function getCertainArticle($userId, $articleId, $latitude, $longitude) {
+    	$articles = $this->getArticleById($articleId, $latitude, $longitude);
     	
     	// 加载发布者信息
     	$this->articlesWithUser($articles['data']);
