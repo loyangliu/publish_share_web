@@ -211,6 +211,7 @@ class ArticlesModel extends AppModel
     			if($item['location'] != '' && $item['location'] != null) {
     				$distance = $this->calDistance($latitude, $longitude, floatval($item['location_latitude']), floatval($item['location_longitude']));
     				$item['distance'] = $distance;
+    				$item['publish_at_human'] = $this->transformDate($item['publish_at']);
     			}
     		}
     	}
