@@ -645,6 +645,27 @@ class ArticlesModel extends AppModel
     		$newMessages = $this->db->getAll("SELECT article_id,from_userid,message,commit_at FROM publish_share.comments where to_userid={$userId} and isread=0;");
     	}
     	
+  		// 绑定用户信息
+    	$userids = array_merge( array_column($newSubscribes, 'user_id'), array_column($newMessages, 'from_userid') );
+    	$uids = implode(',', $userids);
+    	if($uids != '') {
+    		$users = $this->db->getAll("select id,wx_nick_name,wx_avatar_url from users where id in ({$uids})");
+    		$usermap = []
+    		foreach($users as $user) {
+    			$usermap[$user['id']] = $user;
+    		}
+    		
+    		foreach($newSubscribes as & $subscribe) {
+    			$subscribe['nick_name'] = isset($usermap[$subscribe['user_id']]['wx_nick_name']) ? $usermap[$subscribe['user_id']]['wx_nick_name'] : '';
+    			$subscribe['avatar_url'] = isset($usermap[$subscribe['user_id']]['wx_avatar_url']) ? $usermap[$subscribe['user_id']]['wx_avatar_url'] : '';
+    		}
+    		
+    		foreach($newMessages as & $message) {
+    			$message['nick_name'] = isset($usermap[$message['user_id']]['wx_nick_name']) ? $usermap[$message['user_id']]['wx_nick_name'] : '';
+    			$message['avatar_url'] = isset($usermap[$message['user_id']]['wx_avatar_url']) ? $usermap[$message['user_id']]['wx_avatar_url'] : '';
+    		}
+    	}
+    	
     	// 汇总返回
     	$data = [
     		'newSubscribes' => $newSubscribes,
