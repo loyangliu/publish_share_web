@@ -648,7 +648,8 @@ class ArticlesModel extends AppModel
     	// 汇总返回
     	$data = [
     		'newSubscribes' => $newSubscribes,
-    		'newMessages' => $newMessages
+    		'newMessages' => $newMessages,
+    		'count'=>count($newSubscribes) + count($newMessages)
     	];
     	
     	return $data;
