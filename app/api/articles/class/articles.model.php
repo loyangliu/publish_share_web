@@ -650,7 +650,7 @@ class ArticlesModel extends AppModel
     	$uids = implode(',', $userids);
     	if($uids != '') {
     		$users = $this->db->getAll("select id,wx_nick_name,wx_avatar_url from users where id in ({$uids})");
-    		$usermap = []
+    		$usermap = [];
     		foreach($users as $user) {
     			$usermap[$user['id']] = $user;
     		}
