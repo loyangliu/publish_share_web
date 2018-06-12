@@ -658,11 +658,13 @@ class ArticlesModel extends AppModel
     		foreach($newSubscribes as & $subscribe) {
     			$subscribe['nick_name'] = isset($usermap[$subscribe['user_id']]['wx_nick_name']) ? $usermap[$subscribe['user_id']]['wx_nick_name'] : '';
     			$subscribe['avatar_url'] = isset($usermap[$subscribe['user_id']]['wx_avatar_url']) ? $usermap[$subscribe['user_id']]['wx_avatar_url'] : '';
+    			$subscribe['ocurr_date'] = $this->transformDate($subscribe['subscribe_time']);
     		}
     		
     		foreach($newMessages as & $message) {
     			$message['nick_name'] = isset($usermap[$message['from_userid']]['wx_nick_name']) ? $usermap[$message['from_userid']]['wx_nick_name'] : '';
     			$message['avatar_url'] = isset($usermap[$message['from_userid']]['wx_avatar_url']) ? $usermap[$message['from_userid']]['wx_avatar_url'] : '';
+    			$message['ocurr_date'] = $this->transformDate($message['commit_at']);
     		}
     	}
     	
