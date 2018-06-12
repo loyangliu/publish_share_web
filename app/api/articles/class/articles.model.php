@@ -165,9 +165,6 @@ class ArticlesModel extends AppModel
      * 最多 30 条 & 一个月以内的发帖 & 距离不超过20公里
      */
     public function getNearbyArticles($page, $pageSize, $curserid, $latitude, $longitude) {
-    	$now = \Carbon\Carbon::now();
-    	$pastMonthDate = $now->subMonths(1)->toDateTimeString();
-    	
     	
     	$data = [];
     	
@@ -203,43 +200,19 @@ class ArticlesModel extends AppModel
     		$batchid += 1000;
     	}
     	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	$where = " where publish_at > {$pastMonthDate}";
-    	$articleInMonth = $this->db->getAll("select * from articles where publish_at > '{$pastMonthDate}' order by publish_at desc");
-    	
-    	$counter = 0;
-    	$data = [];
-    	if($articleInMonth) {
-    		for($index=0; $index < count($articleInMonth); $index++) {
-    			if($counter < 30) {
-    				$distance = $this->calDistance($latitude, $longitude, floatval($articleInMonth[$index]['location_latitude']), floatval($articleInMonth[$index]['location_longitude']));
-    				if($distance <= 20000) {
-    					$articleInMonth[$index]['distance'] = $distance;
-    					$data[] = $articleInMonth[$index];
-    				}
-    			} else {
-    				break;
-    			}
-    		}
-    	}
-    	
     	usort($data, function($item1, $item2){
     		if($item1['distance'] == $item2['distance']) {
     			return 0;
     		}
     		
-    		return ($item1['distance'] < $item2['distance']) ? 1 : -1; 
+    		return ($item1['distance'] < $item2['distance']) ? 1 : -1;
     	});
     	
-    	return [
-    		'data' => $data
-    	];
+		return [
+			'data' => $data,
+			'page' => $page,
+			'curser' => $currentCurser
+		];
     }
     
     /**
