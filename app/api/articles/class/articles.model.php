@@ -661,8 +661,8 @@ class ArticlesModel extends AppModel
     		}
     		
     		foreach($newMessages as & $message) {
-    			$message['nick_name'] = isset($usermap[$message['user_id']]['wx_nick_name']) ? $usermap[$message['user_id']]['wx_nick_name'] : '';
-    			$message['avatar_url'] = isset($usermap[$message['user_id']]['wx_avatar_url']) ? $usermap[$message['user_id']]['wx_avatar_url'] : '';
+    			$message['nick_name'] = isset($usermap[$message['from_userid']]['wx_nick_name']) ? $usermap[$message['from_userid']]['wx_nick_name'] : '';
+    			$message['avatar_url'] = isset($usermap[$message['from_userid']]['wx_avatar_url']) ? $usermap[$message['from_userid']]['wx_avatar_url'] : '';
     		}
     	}
     	
