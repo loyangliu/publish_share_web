@@ -213,6 +213,7 @@ class ArticlesModel extends AppModel
 			'page' => $page,
 			'curser' => $currentCurser
 		];
+    	
     }
     
     /**
@@ -615,5 +616,33 @@ class ArticlesModel extends AppModel
     public function cancelSubscribe($userId, $articleId)
     {
         $this->db->query("delete from subscribe where user_id='{$userId}' and article_id='{$articleId}'");
+    }
+    
+    /**
+     * 新消息列表
+     * 新消息定义：在最近3个月内，发表的文章有被关注，或被回复，或者自己留言被回复。
+     */
+    public function fetchNewMessages($userId) {
+    	$now = \Carbon\Carbon::now();
+    	$pastMonthDate = $now->subMonths(1)->toDateTimeString();
+    	
+    	// 3个月内我发表的帖子
+    	$allArticles = $this->db->getAll("select * from articles where id={$userId} and publish_at > '{$pastMonthDate}' limit 0,1000");
+    	$allArticleIds = array_column($allArticles, 'id');
+    	$in = implode(',', $allArticleIds);
+    	
+    	// 发表的文章有被关注
+    	$newSubscribes = $this->db->getAll("select article_id,user_id,telphone,message,subscribe_time from subscribe where isread=0 and article_id in ({$in})");
+    	
+    	// 有人留言
+    	$newMessages = $this->db->getAll("SELECT article_id,from_userid,message,commit_at FROM publish_share.comments where to_userid={$userId} or article_id in ({$in}) and isread=0;");
+    	
+    	// 汇总返回
+    	$data = [
+    		'newSubscribes' => $newSubscribes,
+    		'newMessages' => $newMessages
+    	];
+    	
+    	return $data;
     }
 }

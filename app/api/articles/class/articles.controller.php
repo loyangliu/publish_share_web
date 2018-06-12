@@ -181,8 +181,13 @@ class ArticlesController extends AppController
     /**
      * 获取是否有“新消息”
      * 新消息定义：在最近3个月内，发表的文章有被关注，或被回复，或者自己留言被回复。
+     * $now = \Carbon\Carbon::now();
+    	$pastMonthDate = $now->subMonths(1)->toDateTimeString();
      */
     public function fetchNewMessages()  {
     	$userId = intval($_GET['userid']);
+    	
+    	$msgList = $this->model->fetchNewMessages($userId);
+    	echo apiJson(0, null, ["newmsg"=>$msgList]);
     }
 }
