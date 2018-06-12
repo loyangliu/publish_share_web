@@ -29,7 +29,7 @@ class MineModel extends AppModel {
 		
 		$calculator = new Vincenty();
 		
-		return $calculator->getDistance($coordinate1, $coordinate2); // returns xxx (meters; ≈128 kilometers)
+		return round(($calculator->getDistance($coordinate1, $coordinate2))/1000, 2); // xx 公里
 	}
 	
 	public function getImageDir() {
