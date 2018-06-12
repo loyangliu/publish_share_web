@@ -627,15 +627,23 @@ class ArticlesModel extends AppModel
     	$pastMonthDate = $now->subMonths(1)->toDateTimeString();
     	
     	// 3个月内我发表的帖子
-    	$allArticles = $this->db->getAll("select * from articles where id={$userId} and publish_at > '{$pastMonthDate}' limit 0,1000");
+    	$allArticles = $this->db->getAll("select * from articles where user_id={$userId} and publish_at > '{$pastMonthDate}' limit 0,1000");
     	$allArticleIds = array_column($allArticles, 'id');
     	$in = implode(',', $allArticleIds);
     	
     	// 发表的文章有被关注
-    	$newSubscribes = $this->db->getAll("select article_id,user_id,telphone,message,subscribe_time from subscribe where isread=0 and article_id in ({$in})");
+    	if($in != '') {
+    		$newSubscribes = $this->db->getAll("select article_id,user_id,telphone,message,subscribe_time from subscribe where isread=0 and article_id in ({$in})");
+    	} else {
+    		$newSubscribes = [];
+    	}
     	
     	// 有人留言
-    	$newMessages = $this->db->getAll("SELECT article_id,from_userid,message,commit_at FROM publish_share.comments where to_userid={$userId} or article_id in ({$in}) and isread=0;");
+    	if($in != '') {
+    		$newMessages = $this->db->getAll("SELECT article_id,from_userid,message,commit_at FROM publish_share.comments where to_userid={$userId} or article_id in ({$in}) and isread=0;");
+    	} else {
+    		$newMessages = $this->db->getAll("SELECT article_id,from_userid,message,commit_at FROM publish_share.comments where to_userid={$userId} and isread=0;");
+    	}
     	
     	// 汇总返回
     	$data = [
