@@ -39,10 +39,13 @@ class ArticlesController extends AppController
      */
     public function nearby() {
     	$userId = intval($_GET['userid']);
+    	$page = intval($_GET['page']);
+    	$pageSize = intval($_GET['pagesize']);
+    	$curserid = intval($_GET['curserid']);
     	$latitude = floatval($_GET['latitude']); //我的经度
     	$longitude = floatval($_GET['longitude']); //我的纬度
     	
-    	$articles = $this->model->getNearbyArticlesWithAll($userId, $latitude, $longitude, $startId, $page);
+    	$articles = $this->model->getNearbyArticlesWithAll($userId, $page, $pageSize, $curserid, $latitude, $longitude);
     	echo apiJson(0, null, ['articles' => $articles]);
     }
     
@@ -173,5 +176,13 @@ class ArticlesController extends AppController
 
         $this->model->cancelSubscribe($this->user['id'], $articleId);
         echo apiJson(0);
+    }
+    
+    /**
+     * 获取是否有“新消息”
+     * 新消息定义：在最近3个月内，发表的文章有被关注，或被回复，或者自己留言被回复。
+     */
+    public function fetchNewMessages()  {
+    	$userId = intval($_GET['userid']);
     }
 }

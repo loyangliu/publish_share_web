@@ -162,11 +162,53 @@ class ArticlesModel extends AppModel
     
     /**
      * 获取附件的文章列表
-     * 最多 30 条 & 一个月以内的发帖 & 距离不超过200公里
+     * 最多 30 条 & 一个月以内的发帖 & 距离不超过20公里
      */
-    public function getNearbyArticles($latitude, $longitude) {
+    public function getNearbyArticles($page, $pageSize, $curserid, $latitude, $longitude) {
     	$now = \Carbon\Carbon::now();
     	$pastMonthDate = $now->subMonths(1)->toDateTimeString();
+    	
+    	
+    	$data = [];
+    	
+    	if($curserid == 0) {
+    		$curserid = $this->getMaxId();
+    	}
+    	
+    	$counter = 0; // 是否达到 $pageSize 数量
+    	$currentCurser = $curserid;
+    	$batchid = 0;
+    	
+    	while($counter < $pageSize) {
+    		$batchArtciles = $this->db->getAll("select * from articles where id < {$currentCurser} order by id desc limit {$batchid},1000");
+    		
+    		if(count($batchArtciles) == 0) {
+    			break;
+    		}
+    		
+    		foreach($batchArtciles as & $article) {
+    			if($counter >= $pageSize) break;
+    			
+    			if($article['location_latitude'] != '' && $article['location_longitude'] != '') {
+    				$distance = $this->calDistance($latitude, $longitude, floatval($article['location_latitude']), floatval($article['location_longitude']));
+    				if($distance <= 20000) {
+    					$article['distance'] = $distance;
+    					$data[] = $article;
+    					$counter++;
+    					$currentCurser = $article['id'];
+    				}
+    			}
+    		}
+    		
+    		$batchid += 1000;
+    	}
+    	
+    	
+    	
+    	
+    	
+    	
+    	
     	
     	$where = " where publish_at > {$pastMonthDate}";
     	$articleInMonth = $this->db->getAll("select * from articles where publish_at > '{$pastMonthDate}' order by publish_at desc");
@@ -177,7 +219,7 @@ class ArticlesModel extends AppModel
     		for($index=0; $index < count($articleInMonth); $index++) {
     			if($counter < 30) {
     				$distance = $this->calDistance($latitude, $longitude, floatval($articleInMonth[$index]['location_latitude']), floatval($articleInMonth[$index]['location_longitude']));
-    				if($distance <= 200000) {
+    				if($distance <= 20000) {
     					$articleInMonth[$index]['distance'] = $distance;
     					$data[] = $articleInMonth[$index];
     				}
@@ -280,8 +322,8 @@ class ArticlesModel extends AppModel
      * 获取附近的文章列表
      * 最多 30 条 & 一个月以内的发帖 & 距离不超过200公里
      */
-    public function getNearbyArticlesWithAll($userid, $latitude, $longitude) {
-    	$articles = $this->getNearbyArticles($latitude, $longitude);
+    public function getNearbyArticlesWithAll($userId, $page, $pageSize, $curserid, $latitude, $longitude) {
+    	$articles = $this->getNearbyArticles($page, $pageSize, $curserid, $latitude, $longitude);
     	
     	// 加载发布者信息
     	$this->articlesWithUser($articles['data']);

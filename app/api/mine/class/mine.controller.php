@@ -81,4 +81,6 @@ class MineController extends AppController {
     		echo apiJson(-1, "获取异常");
     	}
     }
+    
+
 }
