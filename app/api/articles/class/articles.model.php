@@ -668,6 +668,17 @@ class ArticlesModel extends AppModel
     		}
     	}
     	
+    	// 更新消息状态为已读
+    	$this->db->autoCommit(false);
+    	$this->db->query("update subscribe set isread=1 where isread=0 and article_id in ({$in})");
+    	if($in != '') {
+    		$this->db->query("update comments set isread=1 where to_userid={$userId} or article_id in ({$in}) and isread=0;");
+    	} else {
+    		$newMessages = $this->db->getAll("update comments set isread=1  where to_userid={$userId} and isread=0;");
+    	}
+    	$this->db->commit();
+    	
+    	
     	// 汇总返回
     	$data = [
     		'newSubscribes' => $newSubscribes,
